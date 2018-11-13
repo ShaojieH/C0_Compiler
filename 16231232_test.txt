@@ -1,0 +1,58 @@
+const int false = 0;
+const int true = 1;
+
+int ints[3];
+int a, b;
+
+int fib(int i){
+	if(i<=1)	return 1;
+	else return i * fib(i-1);
+}
+
+void add(){
+	int i;
+	i = 2;
+
+	do{
+		ints[0] = ints[0] + ints[i];
+		i = i-1;
+	}while(i >= 1)
+	printf(ints[0]);
+}
+
+void calc(){
+	const int a = 1;
+	int b;
+	b = ((a + a * a) / a)+2*a;
+	printf(fib(b));
+}
+
+void printChar(char c){
+	c = c + 1;
+	printf(c);
+}
+
+void main(){
+	printf("These are the first fibonscci numbers:");
+	int i;
+	for(i=1; i<6; i = i + 1){
+		printf(fib(i));
+	}
+	
+	printf("Enter three ints");
+	int int1, int2, int3;
+	scanf(int1, int2, int3);
+	ints[0] = int1;
+	ints[1] = int2;
+	ints[2] = int3;
+	add();
+	calc();
+	char c;
+	scanf(c);
+	if(c >= 'f'){
+		printChar(c);
+	}else{
+		printChar('f');
+	}
+	
+}
