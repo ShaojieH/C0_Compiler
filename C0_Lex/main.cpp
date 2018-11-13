@@ -3,7 +3,9 @@
 int main() {
 	init();
 	getNextChar();
-	getNextToken();
+	while (isValid()) {
+		getNextToken();
+	}
 	getchar();
 	return 0;
 }

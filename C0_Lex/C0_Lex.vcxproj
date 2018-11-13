@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Const.h" />
+    <ClInclude Include="Error.h" />
     <ClInclude Include="Lex.h" />
     <ClInclude Include="Shared.h" />
     <ClInclude Include="Token.h" />

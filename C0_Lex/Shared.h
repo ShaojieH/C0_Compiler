@@ -4,7 +4,8 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
-
+#include <algorithm>
+#include <set>
 
 using namespace std;
 fstream inputFile;
@@ -17,7 +18,7 @@ void init() {
 		exit(0);
 	}
 	else {
-		cout << "File opened"<<endl;
+		cout << "File opened, start reading"<<endl;
 	}
 }
 
@@ -25,6 +26,10 @@ void finish() {
 	if (inputFile.is_open()){
 		inputFile.close();
 	}
+}
+
+bool isValid() {
+	return inputFile.peek() != EOF;
 }
 
 char currentChar;
