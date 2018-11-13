@@ -6,6 +6,7 @@ int main() {
 	while (isValid()) {
 		getNextToken();
 	}
+	cout << endl<<endl<<"Done. Press any key to quit" << endl;
 	getchar();
 	return 0;
 }

@@ -14,11 +14,11 @@ const string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\16231232_test.txt";
 void init() {
 	inputFile = fstream(FILE_NAME, fstream::in);
 	if (!inputFile.is_open()) {
-		cout << "Unable to open file, exiting"<<endl;
+		cout << "Unable to open file, exiting"<<endl<<endl;
 		exit(0);
 	}
 	else {
-		cout << "File opened, start reading"<<endl;
+		cout << "File opened, start reading"<<endl<<endl;
 	}
 }
 
