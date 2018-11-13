@@ -54,7 +54,7 @@ bool getSymbol() {
 	else {
 		auto index = distance(SYMBOLS.begin(), it);
 		currentToken->tokenType = SYMBOL;
-		currentToken->tokenValue->valueOrIndex = index;
+		currentToken->tokenValue->valueOrIndex = (int)index;
 		getNextChar();
 		return true;
 	}
@@ -79,7 +79,7 @@ void getCmpOrEqual() {
 	else {
 		auto index = distance(COMPARE_OR_EQUAL.begin(), it);
 		currentToken->tokenType = CMP_OR_EQUAL;
-		currentToken->tokenValue->valueOrIndex = index;
+		currentToken->tokenValue->valueOrIndex = (int)index;
 	}
 }
 
@@ -87,9 +87,15 @@ void getCmpOrEqual() {
 void getNumber() {
 	int num = currentChar - '0';
 	getNextChar();
+
+	if (isDigit() && num == 0) {
+		info("Invalid number, no forward zero allowed");
+		return;
+	}
 	while (isDigit()) {
 		int newDigit = currentChar - '0';
 		num = num * 10 + newDigit;
+		getNextChar();
 	}
 	currentToken->tokenType = NUMBER;
 	currentToken->tokenValue->valueOrIndex = num;
@@ -162,7 +168,7 @@ void getNextToken() {
 		else{	// reserved
 			auto index = distance(RESERVED_WORDS.begin(), it);
 			currentToken->tokenType = RESERVED;
-			currentToken->tokenValue->valueOrIndex = index;
+			currentToken->tokenValue->valueOrIndex = (int)index;
 		}
 	}
 	else if (isCmpOrEqualChar()) {		//compare
