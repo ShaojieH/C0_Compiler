@@ -6,7 +6,8 @@ typedef enum  tType{
 	CHAR, STRING, 
 	RESERVED,
 	SYMBOL,
-	CMP_OR_EQUAL
+	CMP_OR_EQUAL,
+	INVALID
 	//LPAREN, RPAREN, LSBRACKET, RSBRACKET, LBRACKET, RBRACKET, COMMA, SEMI,
 	//PLUS, MULT
 }TokenType;
@@ -24,11 +25,12 @@ const vector<string> RESERVED_WORDS = {
 	"main",
 	"if", "else",
 	"for" , "do", "while",
-	"scanf", "print", "return"
+	"scanf", "printf", "return"
 };
 
 const vector<string> COMPARE_OR_EQUAL = {
 	"=", "<", "<=", ">", ">=", "!=", "=="
 };
+
 
 

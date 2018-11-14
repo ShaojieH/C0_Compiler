@@ -6,14 +6,12 @@ Token* currentToken;
 string currentString;
 
 
-
-
 void getNextChar() {
 	inputFile >> noskipws >> currentChar;
 }
 
 void skipSpace() {
-	while (currentChar == '\n' || currentChar == ' ' || currentChar == '\t') {
+	while ((currentChar == '\n' || currentChar == ' ' || currentChar == '\t') && isFileValid()) {
 		getNextChar();
 	}
 }
@@ -36,12 +34,35 @@ bool isIDChar() {
 	return isLetter() || isDigit();
 }
 
-void getID() {
+bool isCmpOrEqualChar() {
+	return currentChar == '<' || currentChar == '>' || currentChar == '=' || currentChar == '!';
+}
+
+bool isDoubleQuote() {
+	return currentChar == '"';
+}
+
+bool isValidCharInString() {
+	return currentChar >= 32 && currentChar <= 126 && currentChar != 34;
+}
+
+
+bool isValidChar() {
+	return isDigit() || isLetter()
+		|| currentChar == '+' || currentChar == '-' || currentChar == '*' || currentChar == '/';
+}
+
+bool isQuote() {
+	return currentChar == '\'';
+}
+
+
+void getIdOrReserved() {
 	currentString = string();
 	do {
 		currentString += currentChar;
 		getNextChar();
-	} while (isIDChar());
+	} while (isIDChar() && isFileValid());
 }
 
 
@@ -60,9 +81,7 @@ bool getSymbol() {
 	}
 }
 
-bool isCmpOrEqualChar() {
-	return currentChar == '<' || currentChar == '>' || currentChar == '=' || currentChar == '!';
-}
+
 
 void getCmpOrEqual() {
 
@@ -75,6 +94,7 @@ void getCmpOrEqual() {
 	auto it = find(COMPARE_OR_EQUAL.begin(), COMPARE_OR_EQUAL.end(), currentString);
 	if (it == COMPARE_OR_EQUAL.end()) {
 		info("Not a compare or equal token");
+		currentToken->tokenType = INVALID;
 	}
 	else {
 		auto index = distance(COMPARE_OR_EQUAL.begin(), it);
@@ -90,9 +110,10 @@ void getNumber() {
 
 	if (isDigit() && num == 0) {
 		info("Invalid number, no forward zero allowed");
+		currentToken->tokenType = INVALID;
 		return;
 	}
-	while (isDigit()) {
+	while (isDigit() && isFileValid()) {
 		int newDigit = currentChar - '0';
 		num = num * 10 + newDigit;
 		getNextChar();
@@ -101,20 +122,25 @@ void getNumber() {
 	currentToken->tokenValue->valueOrIndex = num;
 }
 
-bool isDoubleQuote() {
-	return currentChar == '"';
-}
+
 
 void getString() {
 	currentString = string();
 	getNextChar();
-	while (!isDoubleQuote()) {
-		if (currentChar >= 32 && currentChar <= 126 && currentChar != 34) {
+	if (!isFileValid()) {
+		info("Invalid string, file ended");
+		currentToken->tokenType = INVALID;
+		return;
+	}
+	while (!isDoubleQuote() && isFileValid()) {
+		if (isValidCharInString()) {
 			currentString += currentChar;
 			getNextChar();
 		}
 		else {
-			info("Invalid character in string");
+			info("Invalid character in string, ascii is:");
+			info(to_string(currentChar));
+			currentToken->tokenType = INVALID;
 			return;
 		}
 
@@ -125,14 +151,6 @@ void getString() {
 }
 
 
-bool isValidChar() {
-	return isDigit() || isLetter()
-		|| currentChar == '+' || currentChar == '-' || currentChar == '*' || currentChar == '/';
-}
-
-bool isQuote() {
-	return currentChar == '\'';
-}
 
 void getCh() {
 	
@@ -140,8 +158,9 @@ void getCh() {
 	if (isValidChar()) {
 		char c = currentChar;
 		getNextChar();
-		if (!isQuote()) {
-			info("Invalid char, missing right quote");
+		if (!isQuote() || !isFileValid()) {
+			currentToken->tokenType = INVALID;
+			info("Invalid char, missing right quote or file ended");
 		}
 		else {
 			currentToken->tokenType = CHAR;
@@ -150,16 +169,18 @@ void getCh() {
 		}
 	}
 	else {
+		currentToken->tokenType = INVALID;
 		info("Invalid char, out of bound");
 	}
 }
 
 void getNextToken() {
 	currentToken = new Token();
+	currentToken->tokenType = INVALID;
 	currentString = string();
 	skipSpace();
 	if (isLetter()) {
-		getID();
+		getIdOrReserved();
 		auto it = find(RESERVED_WORDS.begin(), RESERVED_WORDS.end(), currentString);
 		if (it == RESERVED_WORDS.end()){	// id
 			currentToken->tokenType = ID;
@@ -186,11 +207,11 @@ void getNextToken() {
 		getCh();
 	}
 	else {
-		info("Invalid token");
+		// info("Invalid token");
+		currentToken->tokenType = INVALID;
 		getNextChar();
 	}
-	currentToken->print();
-	//currentToken->printToTest();
+	currentToken->print(true);
 }
 
 

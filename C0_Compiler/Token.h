@@ -11,7 +11,7 @@ class Token {
 public:
 	TokenValue* tokenValue;
 	TokenType tokenType;
-	void print() {
+	void printDetail() {
 		switch (this->tokenType) {
 			case ID: {
 				cout << "Identifier " << (this->tokenValue->idOrString) << endl;
@@ -44,6 +44,10 @@ public:
 				cout << "Char " << (char)this->tokenValue->valueOrIndex << endl;
 				break;
 			}
+			case INVALID: {
+				// cout << "Char " << (char)this->tokenValue->valueOrIndex << endl;
+				break;
+			}
 			default: {
 				cout << "default" << endl;
 				break;
@@ -51,7 +55,7 @@ public:
 		}
 	}
 
-	void printToTest() {
+	void printNormal() {
 		switch (this->tokenType) {
 			case ID: {
 				cout <<(this->tokenValue->idOrString) << " ";
@@ -84,6 +88,10 @@ public:
 				cout <<  "\'" << (char)this->tokenValue->valueOrIndex << "\'" << " ";
 				break;
 			}
+			case INVALID: {
+				// cout << "Char " << (char)this->tokenValue->valueOrIndex << endl;
+				break;
+			}
 			default: {
 				cout << "default" << " ";
 				break;
@@ -91,8 +99,18 @@ public:
 		}
 	}
 
+	void print(bool isDetail = true) {
+		if (isDetail) {
+			printDetail();
+		}
+		else {
+			printNormal();
+		}
+	}
+
 	Token() {
 		this->tokenValue = new TokenValue();
 	}
+
 };
 

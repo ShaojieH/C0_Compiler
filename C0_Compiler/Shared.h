@@ -6,10 +6,13 @@
 #include <cstdlib>
 #include <algorithm>
 #include <set>
-
+#include <ctime>
 using namespace std;
 fstream inputFile;
-const string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\16231232_test.txt";
+string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\16231232_test.txt";
+//string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\another_test.txt";
+char currentChar;
+
 
 void init() {
 	inputFile = fstream(FILE_NAME, fstream::in);
@@ -28,8 +31,10 @@ void finish() {
 	}
 }
 
-bool isValid() {
-	return inputFile.peek() != EOF;
+bool isFileValid() {
+	// return inputFile.peek() != EOF;
+	//return currentChar != EOF;
+	return !inputFile.eof();
 }
 
-char currentChar;
+
