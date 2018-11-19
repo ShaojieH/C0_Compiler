@@ -93,7 +93,7 @@ bool isCmp() {
 	return currentToken->tokenType == CMP_OR_EQUAL && currentToken->tokenValue->valueOrIndex != 0;
 }
 
-bool isStm() { //TODO: add func call
+bool isStm() { 
 	return isIf() 
 		|| isLoop() 
 		|| isLBracket() 
@@ -112,6 +112,26 @@ bool isStrVal() {
 	return currentToken->tokenType == STRING;
 }
 
+bool isVoid() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 3;
+}
+
+bool isFuncRetType() {
+	return isType() || isVoid();
+}
+
+bool isLSBracket() {
+	return currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 2;
+}
+
+bool isRSBracket() {
+	return currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 3;
+}
+
+bool isRParen() {
+	return currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 1;
+}
+
 // get helpers
 
 
@@ -121,7 +141,7 @@ void getVoid() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getLParen() {
@@ -129,22 +149,22 @@ void getLParen() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getRParen() {
-	if (currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 1) {
+	if (isRParen()) {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 void getLBracket() {
 	if (isLBracket()) {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getRBracket() {
@@ -152,7 +172,7 @@ void getRBracket() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getMain() {
@@ -160,7 +180,7 @@ void getMain() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getConst() {
@@ -168,7 +188,7 @@ void getConst() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getInt() {
@@ -176,7 +196,7 @@ void getInt() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getChar() {
@@ -184,7 +204,7 @@ void getChar() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getSemi() {
@@ -192,7 +212,7 @@ void getSemi() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getComma() {
@@ -200,15 +220,16 @@ void getComma() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
-void getIdentifier() {
+string getIdentifier() {
 	if (isIdentifier()) {
+		string id = currentToken->tokenValue->idOrString;
 		getNextToken();
-		return;
+		return id;
 	}
-	syntax("Expecting identifier");
+	error(__func__);
 }
 
 void getAssign() {
@@ -216,7 +237,7 @@ void getAssign() {
 		getNextToken();
 		return;
 	}
-	syntax(string("Expecting =") + ", actually is");
+	error(__func__);
 	currentToken->printAnyway();
 }
 
@@ -225,7 +246,7 @@ void getNumVal() {
 		getNextToken();
 		return;
 	}
-	syntax("Expecting number");
+	error(__func__);
 }
 
 void getCharVal() {
@@ -233,7 +254,7 @@ void getCharVal() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getType() {
@@ -241,7 +262,7 @@ void getType() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getPlus() {
@@ -249,7 +270,7 @@ void getPlus() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getMul() {
@@ -257,7 +278,7 @@ void getMul() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getIf() {
@@ -265,7 +286,7 @@ void getIf() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getElse() {
@@ -273,7 +294,7 @@ void getElse() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getCmp() {
@@ -281,7 +302,7 @@ void getCmp() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getDo() {
@@ -289,7 +310,7 @@ void getDo() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getWhile() {
@@ -297,7 +318,7 @@ void getWhile() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getFor() {
@@ -305,7 +326,7 @@ void getFor() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getScanf() {
@@ -313,7 +334,7 @@ void getScanf() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getPrintf() {
@@ -321,7 +342,7 @@ void getPrintf() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getRet() {
@@ -329,7 +350,7 @@ void getRet() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
 }
 
 void getStrVal() {
@@ -337,5 +358,35 @@ void getStrVal() {
 		getNextToken();
 		return;
 	}
-	syntax();
+	error(__func__);
+}
+
+FuncRetType getFuncRetType() {
+	if (isFuncRetType()) {
+		int type = currentToken->tokenValue->valueOrIndex;
+		getNextToken();
+		switch (type) {
+		case 1: return  RET_INT;
+		case 2: return  RET_CHAR;
+		case 3:	return  RET_VOID;
+		default: error(__func__);
+		}
+	}
+	error(__func__);
+}
+
+void getLSBracket() {
+	if (isLSBracket()) {
+		getNextToken();
+		return;
+	}
+	error(__func__);
+}
+
+void getRSBracket() {
+	if (isRSBracket()) {
+		getNextToken();
+		return;
+	}
+	error(__func__);
 }

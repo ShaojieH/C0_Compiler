@@ -4,10 +4,15 @@
 
 void getNextChar() {
 	inputFile >> noskipws >> currentChar;
+	charCount++;
 }
 
 void skipSpace() {
 	while ((currentChar == '\n' || currentChar == ' ' || currentChar == '\t') && isFileValid()) {
+		if (currentChar == '\n') {
+			lineCount++;
+			charCount = 0;
+		}
 		getNextChar();
 	}
 }
@@ -64,7 +69,9 @@ void getIdOrReserved() {
 
 
 bool getSymbol() {
+	cout << currentChar;
 	auto it = find(SYMBOLS.begin(), SYMBOLS.end(), currentChar);
+
 	if (it == SYMBOLS.end()) {
 		return false;
 	}
@@ -136,6 +143,10 @@ void getString() {
 		else {
 			info("Invalid character in string, ascii is:");
 			info(to_string(currentChar));
+			info("Line count:");
+			info(to_string(lineCount));
+			info("Char count:");
+			info(to_string(charCount));
 			currentToken->tokenType = INVALID;
 			return;
 		}

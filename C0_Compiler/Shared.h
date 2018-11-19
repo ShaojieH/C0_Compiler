@@ -18,7 +18,10 @@ Token* currentToken;
 string currentString;
 stack<Table> tables;
 
+deque<Token> savedTokens;
 
+int lineCount = 1;
+int charCount = 1;
 void init() {
 	inputFile = fstream(FILE_NAME, fstream::in);
 	if (!inputFile.is_open()) {

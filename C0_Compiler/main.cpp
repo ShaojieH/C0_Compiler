@@ -1,6 +1,6 @@
 #include "Const.h"
-// #include "Lex.h"
-#include "Syntax.h"
+ //#include "Lex.h"
+ #include "Syntax.h"
 int main() {
 	init();
 	getNextChar();

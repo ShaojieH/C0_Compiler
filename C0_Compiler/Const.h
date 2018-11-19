@@ -10,10 +10,13 @@
 #include <ctime>
 #include <unordered_map>
 #include <stack>
+#include <deque>
 
 using namespace std;
 
-
+typedef enum  FuncRetType {
+	RET_INT, RET_CHAR, RET_VOID
+}FuncRetType;
 
 typedef enum  TokenType{
 	ID, NUMBER, 
@@ -41,7 +44,7 @@ const vector<char> SYMBOLS = {
 };
 const vector<string> RESERVED_WORDS = {
 	"const", "int", "char", "void",
-	"main",
+	"main0",
 	"if", "else",
 	"for" , "do", "while",
 	"scanf", "printf", "return"

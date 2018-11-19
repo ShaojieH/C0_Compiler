@@ -5,11 +5,10 @@
 void getProgram();
 void getConstDec();
 void getConstDef();
-void getDecHead();
+
 void getVarDec();
 void getVarDef();
-void getRetFuncDef();
-void getNoRetFuncDef();
+void getFuncDef();
 void getCompoundStm();
 void getParamList();
 void getMainFunc();
@@ -22,8 +21,7 @@ void getConditionStm();
 void getCondition();
 void getLoopStm();
 void getStep();
-void getRetFuncCall();
-void getNoRetFuncCall();
+void getFuncCall();
 void getValParamList();
 void getStmList();
 void getScanfStm();
@@ -31,15 +29,17 @@ void getPrintfStm();
 void getRetStm();
 
 
+bool isInFuncDef = false;
+
 void getProgram() {
 	syntax(__func__);
 	if (isConst()) {
 		getConstDec();
 	}
-	if (isInt() || isChar()) {
-		getVarDec();	// TODO: merge function declaration here
+	if (isType()) {
+		getVarDec();
 	}
-	getMainFunc();
+	// getMainFunc();
 }
 void getConstDec() {
 	syntax(__func__);
@@ -76,40 +76,82 @@ void getConstDef() {
 		}
 	}
 }
-void getDecHead() {
+
+void getVarDec() {
 	syntax(__func__);
-	if (isInt()) {
-		getInt();
-		getIdentifier();
-	}
-	else {
-		getChar();
-		getIdentifier();
-	}
-}
-void getVarDec() {}	// TODO add var dec
-void getVarDef() {}	// TODO add var def
-void getRetFuncDef() {
-	syntax(__func__);
-	getDecHead();
-	getLParen();
-	getParamList();
-	getRParen();
-	getLBracket();
-	getCompoundStm();
-	getRBracket();
-}
-void getNoRetFuncDef() {
-	syntax(__func__);
-	getVoid();
+	getVarDef();
+}	
+void getVarDef() {
+
+	Token* t1 = new Token(*currentToken);	// int
+	getType();
+	Token* t2 = new Token(*currentToken);	// add
 	getIdentifier();
+	Token* t3 = new Token(*currentToken);	// (
+
+	if (isLParen()) {
+		currentToken = t1;
+		savedTokens.push_back(*t2);
+		savedTokens.push_back(*t3);
+		getFuncDef();
+		return;
+	}
+	syntax(__func__);
+	if (isLSBracket()) {
+		getLSBracket();
+		getNumVal();
+		getRSBracket();
+	}
+	while (isComma()) {
+		getComma();
+		getIdentifier();
+		if (isLBracket()) {
+			getLBracket();
+			getNumVal();
+			getRBracket();
+		}
+	}
+
+	getSemi();
+	if (isType()) {
+		getVarDef();
+	}
+}	
+
+
+void getFuncDef() {
+
+	if (isInFuncDef) {
+		error("Function define within function");
+	}
+
+	isInFuncDef = true;
+
+	FuncRetType retType = getFuncRetType(); 
+	string id = getIdentifier();
+	if (retType == RET_VOID && id == "main") {
+		getMainFunc();
+		return;
+	}
+	syntax(__func__);
 	getLParen();
 	getParamList();
 	getRParen();
 	getLBracket();
 	getCompoundStm();
 	getRBracket();
+
+
+	isInFuncDef = false;
+
+	if (isFuncRetType()) {
+		getFuncDef();
+	}
+
+	
 }
+
+
 void getCompoundStm() {
 	syntax(__func__);
 	if (isConst()) {
@@ -122,6 +164,9 @@ void getCompoundStm() {
 }
 void getParamList() {
 	syntax(__func__);
+	if (!isType()) {
+		return;
+	}
 	getType();
 	getIdentifier();
 	while (isComma()) {
@@ -132,13 +177,17 @@ void getParamList() {
 }
 void getMainFunc() {
 	syntax(__func__);
-	getVoid();
-	getMain();
+	// getVoid();
+	// getMain();
 	getLParen();
 	getRParen();
 	getLBracket();
 	getCompoundStm();
 	getRBracket();
+
+	if (currentToken->tokenType != INVALID) {
+		error("File not finished after main");
+	}
 }
 void getExp() {
 	syntax(__func__);
@@ -159,10 +208,23 @@ void getTerm() {
 		getFactor();
 	}
 }
-void getFactor() {	// TODO: array by index, call function
+void getFactor() {
 	syntax(__func__);
 	if (isIdentifier()) {
+		Token* t1 = new Token(*currentToken);
 		getIdentifier();
+		if (isLSBracket()) {	// array index
+			getLSBracket();
+			getExp();
+			getRSBracket();
+		} else if (isLParen()) {	// call function
+			Token* t2 = new Token(*currentToken);
+			currentToken = t1;
+			savedTokens.push_back(*t2);
+			getFuncCall();
+		} else {	// just id
+			
+		}
 	}else if (isNumber()) {
 		getNumVal();
 	}else if (isCharVal()) {
@@ -173,7 +235,7 @@ void getFactor() {	// TODO: array by index, call function
 		getRParen();
 	}
 }
-void getStm() {	//TODO: add func call
+void getStm() {
 	syntax(__func__);
 	if (isIf()) {
 		getConditionStm();
@@ -184,7 +246,19 @@ void getStm() {	//TODO: add func call
 		getStmList();
 		getRBracket();
 	}else if (isIdentifier()) {
-		getAssignStm();
+		Token* t1 = new Token(*currentToken);		// id
+		getIdentifier();
+		Token* t2 = new Token(*currentToken);	// (
+		if (isLParen()) {	// func call
+			currentToken = t1;
+			savedTokens.push_back(*t2);
+			getFuncCall();
+		} else {
+			currentToken = t1;
+			savedTokens.push_back(*t2);
+			getAssignStm();
+		}
+		getSemi();
 	}else if (isPrintf()) {
 		getPrintfStm();
 		getSemi();
@@ -198,9 +272,14 @@ void getStm() {	//TODO: add func call
 		getSemi();
 	}
 }
-void getAssignStm() {	// TODO: add array
+void getAssignStm() {
 	syntax(__func__);
 	getIdentifier();
+	if (isLSBracket()) {
+		getLSBracket();
+		getExp();
+		getRSBracket();
+	}
 	getAssign();
 	getExp();
 }
@@ -255,22 +334,17 @@ void getStep() {
 	syntax(__func__);
 	getNumVal();
 }
-void getRetFuncCall() {
+void getFuncCall() {
 	syntax(__func__);
 	getIdentifier();
 	getLParen();
 	getValParamList();
 	getRParen();
 }
-void getNoRetFuncCall() {
-	syntax(__func__);
-	getIdentifier();
-	getLParen();
-	getValParamList();
-	getRParen();
-}
+
 void getValParamList() {
 	syntax(__func__);
+	if (isRParen())	return;
 	getExp();
 	while (isComma()) {
 		getComma();

@@ -4,5 +4,12 @@ void info(string info = "Default info") {
 }
 
 void syntax(string info = "Default info") {
-	cout << "Syntax: " << info << endl;
+	 cout << "Syntax: " << info << endl;
+
+}
+
+void error(string info = "") {
+	cout << "Error: " <<info<< endl;
+	getchar();
+	exit(0);
 }
