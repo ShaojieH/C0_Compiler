@@ -41,7 +41,7 @@ void getNextToken() {
 		currentToken->tokenType = INVALID;
 		getNextChar();
 	}
-	currentToken->print(true);
+	currentToken->print();
 }
 
 

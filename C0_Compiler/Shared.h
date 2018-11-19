@@ -2,7 +2,7 @@
 
 #include "Token.h"
 #include "Const.h"
-#include "Error.h"
+#include "Log.h"
 #include "Table.h"
 
 

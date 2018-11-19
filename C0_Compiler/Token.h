@@ -1,5 +1,9 @@
 #pragma once
 #include "Const.h"
+
+bool printToken = false;
+bool printTokenWithDetail = true;
+
 class  TokenValue {
 public:
 	string idOrString;
@@ -98,12 +102,23 @@ public:
 		}
 	}
 
-	void print(bool isDetail = true) {
-		if (isDetail) {
-			//printDetail();
+	void print() {
+
+		if (printToken) {
+			if (printTokenWithDetail) {
+				printDetail();
+			}
+			else {
+				printNormal();
+			}
 		}
-		else {
-			//printNormal();
+	}
+
+	void printAnyway() {
+		if (printTokenWithDetail) {
+				printDetail();
+		} else {
+				printNormal();
 		}
 	}
 

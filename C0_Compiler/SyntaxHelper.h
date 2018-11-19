@@ -19,26 +19,117 @@ bool isComma() {
 	return currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 6;
 }
 
+bool isSemi() {
+	return currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 7;
+}
+
+bool isType() {
+	return isInt() || isChar();
+}
+
+bool isPlus(){
+	return currentToken->tokenType == SYMBOL 
+	&& (currentToken->tokenValue->valueOrIndex == 8 || currentToken->tokenValue->valueOrIndex == 9);
+}
+
+bool isMul(){
+	return currentToken->tokenType == SYMBOL
+	&& (currentToken->tokenValue->valueOrIndex == 10 || currentToken->tokenValue->valueOrIndex == 11);
+}
+
+bool isIdentifier() {
+	return currentToken->tokenType == ID;
+}
+
+bool isNumber() {
+	return currentToken->tokenType == NUMBER;
+}
+
+bool isCharVal() {
+	return currentToken->tokenType == CHAR;
+}
+
+bool isLBracket() {
+	return currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 4;
+}
+
+bool isIf() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 5;
+}
+
+bool isElse() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 6;
+}
+
+bool isFor() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 7;
+}
+
+bool isDo() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 8;
+}
+bool isWhile() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 9;
+}
 
 
+bool isLoop() {
+	return isFor() || isDo();
+}
 
+bool isScanf() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 10;
+}
+
+bool isPrintf() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 11;
+}
+
+bool isRet() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 12;
+}
+
+bool isCmp() {
+	return currentToken->tokenType == CMP_OR_EQUAL && currentToken->tokenValue->valueOrIndex != 0;
+}
+
+bool isStm() { //TODO: add func call
+	return isIf() 
+		|| isLoop() 
+		|| isLBracket() 
+		|| isIdentifier() 
+		|| isPrintf() 
+		|| isScanf() 
+		|| isRet() 
+		|| isSemi();
+}
+
+bool isLParen() {
+	return currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 0;
+}
+
+bool isStrVal() {
+	return currentToken->tokenType == STRING;
+}
 
 // get helpers
+
+
 
 void getVoid() {
 	if (currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 3) {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getLParen() {
-	if (currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 0) {
+	if (isLParen()) {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getRParen() {
@@ -46,14 +137,14 @@ void getRParen() {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 void getLBracket() {
-	if (currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 4) {
+	if (isLBracket()) {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getRBracket() {
@@ -61,7 +152,7 @@ void getRBracket() {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getMain() {
@@ -69,7 +160,7 @@ void getMain() {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getConst() {
@@ -77,7 +168,7 @@ void getConst() {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getInt() {
@@ -85,7 +176,7 @@ void getInt() {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getChar() {
@@ -93,15 +184,15 @@ void getChar() {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getSemi() {
-	if (currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 7) {
+	if (isSemi()) {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getComma() {
@@ -109,15 +200,15 @@ void getComma() {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
 void getIdentifier() {
-	if (currentToken->tokenType == ID) {
+	if (isIdentifier()) {
 		getNextToken();
 		return;
 	}
-	info("Expecting identifier");
+	syntax("Expecting identifier");
 }
 
 void getAssign() {
@@ -125,7 +216,8 @@ void getAssign() {
 		getNextToken();
 		return;
 	}
-	info("Expecting =");
+	syntax(string("Expecting =") + ", actually is");
+	currentToken->printAnyway();
 }
 
 void getNumVal() {
@@ -133,14 +225,117 @@ void getNumVal() {
 		getNextToken();
 		return;
 	}
-	info("Expecting number");
+	syntax("Expecting number");
 }
 
 void getCharVal() {
-	if (currentToken->tokenType == CHAR) {
+	if (isCharVal()) {
 		getNextToken();
 		return;
 	}
-	info();
+	syntax();
 }
 
+void getType() {
+	if (isType()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getPlus() {
+	if (isPlus()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getMul() {
+	if (isMul()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getIf() {
+	if (isIf()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getElse() {
+	if (isElse()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getCmp() {
+	if (isCmp()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getDo() {
+	if (isDo()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getWhile() {
+	if (isWhile()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getFor() {
+	if (isFor()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getScanf() {
+	if (isScanf()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getPrintf() {
+	if (isPrintf()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getRet() {
+	if (isRet()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}
+
+void getStrVal() {
+	if (isStrVal()) {
+		getNextToken();
+		return;
+	}
+	syntax();
+}

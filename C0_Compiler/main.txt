@@ -1,7 +1,7 @@
 
-const int a = 10, b = 20;
 const char c = 'c', d = 'd';
-
+const int a = 10, b = 20;
 void main(){
-
+	const char c = 'c', d = 'd';
+	a = c + b;
 }
