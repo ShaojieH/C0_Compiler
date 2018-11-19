@@ -1,5 +1,19 @@
 #pragma once
-#include "Shared.h"
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <cstdlib>
+#include <algorithm>
+#include <set>
+#include <ctime>
+#include <unordered_map>
+#include <stack>
+
+using namespace std;
+
+
 
 typedef enum  TokenType{
 	ID, NUMBER, 

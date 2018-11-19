@@ -1,12 +1,6 @@
 #pragma once
 #include "Const.h"
 #include "Token.h"
-class Table {
-public:
-	unordered_map<string, ConstItem> constItems;
-	unordered_map<string, VarItem> varItems;
-	unordered_map<string, FuncItem> funcItems;
-};
 
 class ConstItem {
 public:
@@ -26,4 +20,14 @@ public:
 	TableItemType returnType;
 	vector<TableItemType> params;
 };
+
+
+class Table {
+public:
+	unordered_map<string, ConstItem> constItems;
+	unordered_map<string, VarItem> varItems;
+	unordered_map<string, FuncItem> funcItems;
+};
+
+
 

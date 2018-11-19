@@ -9,7 +9,7 @@ int main() {
 	
 
 
-	getMainFunc();
+	getProgram();
 
 
 	cout << endl<<endl<<"Done. Press any key to quit" << endl;

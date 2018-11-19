@@ -39,6 +39,12 @@
     <ClInclude Include="Syntax.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="SyntaxHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="LexHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
