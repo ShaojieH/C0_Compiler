@@ -1,6 +1,5 @@
 #pragma once
 #include "Const.h"
-
 class  TokenValue {
 public:
 	string idOrString;
@@ -111,6 +110,33 @@ public:
 	Token() {
 		this->tokenValue = new TokenValue();
 	}
+
+
+	// syntax helper
+
+	bool isVoid() {
+		return this->tokenType == RESERVED && this->tokenValue->valueOrIndex == 3;
+	}
+
+	bool isLParen() {
+		return this->tokenType == SYMBOL && this->tokenValue->valueOrIndex == 0;
+	}
+
+	bool isRParen() {
+		return this->tokenType == SYMBOL && this->tokenValue->valueOrIndex == 1;
+	}
+	bool isLBracket() {
+		return this->tokenType == SYMBOL && this->tokenValue->valueOrIndex == 4;
+	}
+
+	bool isRBracket() {
+		return this->tokenType == SYMBOL && this->tokenValue->valueOrIndex == 5;
+	}
+
+	bool isMain() {
+		return this->tokenType == RESERVED && this->tokenValue->valueOrIndex == 4;
+	}
+
 
 };
 

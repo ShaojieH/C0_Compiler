@@ -120,10 +120,15 @@
     <ClInclude Include="Error.h" />
     <ClInclude Include="Lex.h" />
     <ClInclude Include="Shared.h" />
+    <ClInclude Include="Syntax.h" />
+    <ClInclude Include="Table.h" />
     <ClInclude Include="Token.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="main.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,7 +1,7 @@
 #pragma once
 #include "Shared.h"
 
-typedef enum  tType{
+typedef enum  TokenType{
 	ID, NUMBER, 
 	CHAR, STRING, 
 	RESERVED,
@@ -11,6 +11,11 @@ typedef enum  tType{
 	//LPAREN, RPAREN, LSBRACKET, RSBRACKET, LBRACKET, RBRACKET, COMMA, SEMI,
 	//PLUS, MULT
 }TokenType;
+
+typedef enum  TableItemType {
+	T_STRING, T_INT, T_CHAR
+}TableItemType;
+
 
 
 const vector<char> SYMBOLS = {
