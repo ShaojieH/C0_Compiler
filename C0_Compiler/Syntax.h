@@ -8,7 +8,7 @@ void getConstDef();
 
 void getVarDec();
 void getVarDef();
-void getFuncDef();
+void getFuncDef(Token* retType, Token* identifier);
 void getCompoundStm();
 void getParamList();
 void getMainFunc();
@@ -16,12 +16,12 @@ void getExp();
 void getTerm();
 void getFactor();
 void getStm();
-void getAssignStm();
+void getAssignStm(Token* identifier);
 void getConditionStm();
 void getCondition();
 void getLoopStm();
 void getStep();
-void getFuncCall();
+void getFuncCall(Token* identifier);
 void getValParamList();
 void getStmList();
 void getScanfStm();
@@ -36,7 +36,7 @@ void getProgram() {
 	if (isConst()) {
 		getConstDec();
 	}
-	if (isType()) {
+	if (isFuncRetType()) {
 		getVarDec();
 	}
 	// getMainFunc();
@@ -84,31 +84,31 @@ void getVarDec() {
 void getVarDef() {
 
 	Token* t1 = new Token(*currentToken);	// int
-	getType();
+	getFuncRetType();
 	Token* t2 = new Token(*currentToken);	// add
 	getIdentifier();
-	Token* t3 = new Token(*currentToken);	// (
+	
+
 
 	if (isLParen()) {
-		currentToken = t1;
-		savedTokens.push_back(*t2);
-		savedTokens.push_back(*t3);
-		getFuncDef();
+		getFuncDef(t1, t2);
 		return;
+	} else if(t1->tokenValue->valueOrIndex == 3){
+		error("void var declaration");
 	}
 	syntax(__func__);
 	if (isLSBracket()) {
 		getLSBracket();
-		getNumVal();
+		getUnsignedNumVal();
 		getRSBracket();
 	}
 	while (isComma()) {
 		getComma();
 		getIdentifier();
-		if (isLBracket()) {
-			getLBracket();
-			getNumVal();
-			getRBracket();
+		if (isLSBracket()) {
+			getLSBracket();
+			getUnsignedNumVal();
+			getRSBracket();
 		}
 	}
 
@@ -119,7 +119,7 @@ void getVarDef() {
 }	
 
 
-void getFuncDef() {
+void getFuncDef(Token* retType, Token* identifier) {
 
 	if (isInFuncDef) {
 		error("Function define within function");
@@ -127,12 +127,13 @@ void getFuncDef() {
 
 	isInFuncDef = true;
 
-	FuncRetType retType = getFuncRetType(); 
-	string id = getIdentifier();
-	if (retType == RET_VOID && id == "main") {
+	if (retType->tokenType == RESERVED
+		&& retType->tokenValue->valueOrIndex == 3 
+		&& identifier->tokenValue->idOrString == "main") {
 		getMainFunc();
 		return;
 	}
+
 	syntax(__func__);
 	getLParen();
 	getParamList();
@@ -145,7 +146,20 @@ void getFuncDef() {
 	isInFuncDef = false;
 
 	if (isFuncRetType()) {
-		getFuncDef();
+		Token* retType = new Token(*currentToken);
+		getFuncRetType();
+		Token* identifier = new Token(*currentToken);
+		getIdentifier();
+		getFuncDef(retType, identifier);
+	} else {
+
+		if (retType->tokenType != RESERVED
+			|| retType->tokenValue->valueOrIndex != 3
+			|| identifier->tokenValue->idOrString != "main") {
+			error("main not found");
+			return;
+		}
+
 	}
 
 	
@@ -177,15 +191,13 @@ void getParamList() {
 }
 void getMainFunc() {
 	syntax(__func__);
-	// getVoid();
-	// getMain();
 	getLParen();
 	getRParen();
 	getLBracket();
 	getCompoundStm();
 	getRBracket();
 
-	if (currentToken->tokenType != INVALID) {
+	if (currentChar != EOF) {
 		error("File not finished after main");
 	}
 }
@@ -211,17 +223,14 @@ void getTerm() {
 void getFactor() {
 	syntax(__func__);
 	if (isIdentifier()) {
-		Token* t1 = new Token(*currentToken);
+		Token* t1 = new Token(*currentToken); // id
 		getIdentifier();
 		if (isLSBracket()) {	// array index
 			getLSBracket();
 			getExp();
 			getRSBracket();
 		} else if (isLParen()) {	// call function
-			Token* t2 = new Token(*currentToken);
-			currentToken = t1;
-			savedTokens.push_back(*t2);
-			getFuncCall();
+			getFuncCall(t1);
 		} else {	// just id
 			
 		}
@@ -248,15 +257,10 @@ void getStm() {
 	}else if (isIdentifier()) {
 		Token* t1 = new Token(*currentToken);		// id
 		getIdentifier();
-		Token* t2 = new Token(*currentToken);	// (
 		if (isLParen()) {	// func call
-			currentToken = t1;
-			savedTokens.push_back(*t2);
-			getFuncCall();
+			getFuncCall(t1);
 		} else {
-			currentToken = t1;
-			savedTokens.push_back(*t2);
-			getAssignStm();
+			getAssignStm(t1);
 		}
 		getSemi();
 	}else if (isPrintf()) {
@@ -272,9 +276,8 @@ void getStm() {
 		getSemi();
 	}
 }
-void getAssignStm() {
+void getAssignStm(Token* identifier) {
 	syntax(__func__);
-	getIdentifier();
 	if (isLSBracket()) {
 		getLSBracket();
 		getExp();
@@ -326,17 +329,17 @@ void getLoopStm() {
 		getIdentifier();
 		getPlus();
 		getStep();
+		getRParen();
 		getStm();
 	}
 }
 
 void getStep() {
 	syntax(__func__);
-	getNumVal();
+	getUnsignedNumVal();
 }
-void getFuncCall() {
+void getFuncCall(Token* identifier) {
 	syntax(__func__);
-	getIdentifier();
 	getLParen();
 	getValParamList();
 	getRParen();
@@ -374,7 +377,7 @@ void getPrintfStm() {
 	getPrintf();
 	getLParen();
 	if (isStrVal()) {
-		getString();
+		getStrVal();
 		if (isComma()) {
 			getComma();
 			getExp();

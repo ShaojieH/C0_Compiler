@@ -6,11 +6,8 @@ int main() {
 	getNextChar();
 	getNextToken();
 	clock_t begin = clock();
-	
-
 
 	getProgram();
-
 
 	cout << endl<<endl<<"Done. Press any key to quit" << endl;
 	clock_t end = clock();

@@ -7,8 +7,8 @@ char z, zz, zz;
 int c, cc, ccc;
 
 int add(){
-	printf("fuck");
 	const int a = 1, b = 2;
+	printf("");
 	return (a + b);
 
 }
@@ -20,8 +20,6 @@ int minus(){
 
 void main(){
 	const char c = 'c', d = 'd';
-
-
 
 	a = c[8*c] + add();
 	add();

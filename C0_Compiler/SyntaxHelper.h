@@ -241,13 +241,6 @@ void getAssign() {
 	currentToken->printAnyway();
 }
 
-void getNumVal() {
-	if (currentToken->tokenType == NUMBER) {
-		getNextToken();
-		return;
-	}
-	error(__func__);
-}
 
 void getCharVal() {
 	if (isCharVal()) {
@@ -279,6 +272,22 @@ void getMul() {
 		return;
 	}
 	error(__func__);
+}
+
+void getUnsignedNumVal() {
+	if (currentToken->tokenType == NUMBER) {
+		getNextToken();
+		return;
+	}
+	error(__func__);
+}
+
+
+void getNumVal() {
+	if (isPlus()) {
+		getPlus();
+	}
+	getUnsignedNumVal();
 }
 
 void getIf() {

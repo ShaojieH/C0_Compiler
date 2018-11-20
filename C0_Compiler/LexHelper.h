@@ -3,7 +3,9 @@
 #include "Shared.h"
 
 void getNextChar() {
-	inputFile >> noskipws >> currentChar;
+	inputFile.get(currentChar);
+
+	//inputFile >> noskipws >> currentChar;
 	charCount++;
 }
 
@@ -14,6 +16,9 @@ void skipSpace() {
 			charCount = 0;
 		}
 		getNextChar();
+		if (!isFileValid()) {
+			currentChar = EOF;
+		}
 	}
 }
 
@@ -69,7 +74,6 @@ void getIdOrReserved() {
 
 
 bool getSymbol() {
-	cout << currentChar;
 	auto it = find(SYMBOLS.begin(), SYMBOLS.end(), currentChar);
 
 	if (it == SYMBOLS.end()) {
