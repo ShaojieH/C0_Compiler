@@ -44,7 +44,7 @@ const vector<char> SYMBOLS = {
 };
 const vector<string> RESERVED_WORDS = {
 	"const", "int", "char", "void",
-	"main0",
+	"main",
 	"if", "else",
 	"for" , "do", "while",
 	"scanf", "printf", "return"

@@ -30,16 +30,18 @@ void getRetStm();
 
 
 bool isInFuncDef = false;
+bool isMainPresent = true;
 
 void getProgram() {
 	syntax(__func__);
 	if (isConst()) {
 		getConstDec();
 	}
-	if (isFuncRetType()) {
-		getVarDec();
+	getVarDec();
+	
+	if (!isMainPresent) {
+		error("No main found");
 	}
-	// getMainFunc();
 }
 void getConstDec() {
 	syntax(__func__);
@@ -83,12 +85,11 @@ void getVarDec() {
 }	
 void getVarDef() {
 
-	Token* t1 = new Token(*currentToken);	// int
+	Token* t1 = new Token(*currentToken);	// int, void
 	getFuncRetType();
-	Token* t2 = new Token(*currentToken);	// add
-	getIdentifier();
+	Token* t2 = new Token(*currentToken);	// add, main
+	getIdentifierOrMain();
 	
-
 
 	if (isLParen()) {
 		getFuncDef(t1, t2);
@@ -113,7 +114,7 @@ void getVarDef() {
 	}
 
 	getSemi();
-	if (isType()) {
+	if (isFuncRetType()) {
 		getVarDef();
 	}
 }	
@@ -129,7 +130,8 @@ void getFuncDef(Token* retType, Token* identifier) {
 
 	if (retType->tokenType == RESERVED
 		&& retType->tokenValue->valueOrIndex == 3 
-		&& identifier->tokenValue->idOrString == "main") {
+		&& identifier->tokenType == RESERVED
+		&& identifier->tokenValue->valueOrIndex == 4) {
 		getMainFunc();
 		return;
 	}
@@ -149,20 +151,9 @@ void getFuncDef(Token* retType, Token* identifier) {
 		Token* retType = new Token(*currentToken);
 		getFuncRetType();
 		Token* identifier = new Token(*currentToken);
-		getIdentifier();
+		getIdentifierOrMain();
 		getFuncDef(retType, identifier);
-	} else {
-
-		if (retType->tokenType != RESERVED
-			|| retType->tokenValue->valueOrIndex != 3
-			|| identifier->tokenValue->idOrString != "main") {
-			error("main not found");
-			return;
-		}
-
 	}
-
-	
 }
 
 
@@ -191,6 +182,8 @@ void getParamList() {
 }
 void getMainFunc() {
 	syntax(__func__);
+	isMainPresent = true;
+
 	getLParen();
 	getRParen();
 	getLBracket();

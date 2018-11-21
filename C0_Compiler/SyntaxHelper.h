@@ -132,6 +132,11 @@ bool isRParen() {
 	return currentToken->tokenType == SYMBOL && currentToken->tokenValue->valueOrIndex == 1;
 }
 
+bool isMain() {
+	return currentToken->tokenType == RESERVED && currentToken->tokenValue->valueOrIndex == 4;
+}
+
+
 // get helpers
 
 
@@ -231,6 +236,20 @@ string getIdentifier() {
 	}
 	error(__func__);
 }
+
+string getIdentifierOrMain() {
+	if (isIdentifier()) {
+		string id = currentToken->tokenValue->idOrString;
+		getNextToken();
+		return id;
+	}
+	if (isMain()) {
+		getNextToken();
+		return "main";
+	}
+	error(__func__);
+}
+
 
 void getAssign() {
 	if (currentToken->tokenType == CMP_OR_EQUAL && currentToken->tokenValue->valueOrIndex == 0) {

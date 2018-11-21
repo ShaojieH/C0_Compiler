@@ -64,5 +64,8 @@
     <Text Include="error_test.txt">
       <Filter>test</Filter>
     </Text>
+    <Text Include="test3.txt">
+      <Filter>test</Filter>
+    </Text>
   </ItemGroup>
 </Project>
