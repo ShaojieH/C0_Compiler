@@ -14,9 +14,9 @@
 
 using namespace std;
 
-typedef enum  FuncRetType {
-	RET_INT, RET_CHAR, RET_VOID
-}FuncRetType;
+//typedef enum  FuncRetType {
+//	RET_INT, RET_CHAR, RET_VOID
+//}FuncRetType;
 
 typedef enum  TokenType{
 	ID, NUMBER, 
@@ -30,10 +30,12 @@ typedef enum  TokenType{
 }TokenType;
 
 typedef enum  TableItemType {
-	T_STRING, T_INT, T_CHAR
+	T_CONST, T_VAR, T_FUNC
 }TableItemType;
 
-
+typedef enum  TableItemDataType {
+	T_STRING, T_INT, T_CHAR, T_VOID
+}TableItemDataType;
 
 const vector<char> SYMBOLS = {
 	'(', ')', 

@@ -2,6 +2,7 @@
  //#include "Lex.h"
  #include "Syntax.h"
 int main() {
+
 	init();
 	getNextChar();
 	getNextToken();

@@ -8,9 +8,9 @@ void getConstDef();
 
 void getVarDec();
 void getVarDef();
-void getFuncDef(Token* retType, Token* identifier);
+void getFuncDef(TableItemDataType retType, string identifier);
 void getCompoundStm();
-void getParamList();
+vector<Param> getParamList();
 void getMainFunc();
 void getExp();
 void getTerm();
@@ -33,6 +33,7 @@ bool isInFuncDef = false;
 bool isMainPresent = true;
 
 void getProgram() {
+	symbolTable->addTable();
 	syntax(__func__);
 	if (isConst()) {
 		getConstDec();
@@ -42,6 +43,7 @@ void getProgram() {
 	if (!isMainPresent) {
 		error("No main found");
 	}
+	symbolTable->removeTable();
 }
 void getConstDec() {
 	syntax(__func__);
@@ -51,30 +53,36 @@ void getConstDec() {
 		getSemi();
 	}
 }
+
+void getConstIntDefHelper() {
+	string id = getIdentifier();
+	getAssign();
+	int val = getNumVal();
+	symbolTable->insertSymbol(id, new ConstItem(T_INT, TokenValue(string(), val)));
+}
+
+void getConstCharDefHelper() {
+	string id = getIdentifier();
+	getAssign();
+	char val = getCharVal();
+	symbolTable->insertSymbol(id, new ConstItem(T_CHAR, TokenValue(string(), val)));
+}
+
 void getConstDef() {
 	syntax(__func__);
 	if (isInt()) {
 		getInt();
-		getIdentifier();
-		getAssign();
-		getNumVal();
+		getConstIntDefHelper();
 		while (isComma()) {
 			getComma();
-			getIdentifier();
-			getAssign();
-			getNumVal();
+			getConstIntDefHelper();
 		}
-	}
-	else if (isChar()) {
+	}else{
 		getChar();
-		getIdentifier();
-		getAssign();
-		getCharVal();
+		getConstCharDefHelper();
 		while (isComma()) {
-			getNextToken();
-			getIdentifier();
-			getAssign();
-			getCharVal();
+			getComma();
+			getConstCharDefHelper();
 		}
 	}
 }
@@ -82,35 +90,42 @@ void getConstDef() {
 void getVarDec() {
 	syntax(__func__);
 	getVarDef();
-}	
+}
+
+void getVarDefHelper(TableItemDataType type, string id) {
+	bool isArray = false;
+	int arraySize = -1;
+	if (isLSBracket()) {
+		getLSBracket();
+		arraySize = getUnsignedNumVal();
+		isArray = true;
+		getRSBracket();
+	}
+	symbolTable->insertSymbol(id, new VarItem(type, isArray, arraySize));
+}
+
 void getVarDef() {
 
-	Token* t1 = new Token(*currentToken);	// int, void
-	getFuncRetType();
-	Token* t2 = new Token(*currentToken);	// add, main
-	getIdentifierOrMain();
+	TableItemDataType type = getFuncRetType();	// int, void, char
 	
-
+	string id = getIdentifierOrMain();	// add, main
+	
 	if (isLParen()) {
-		getFuncDef(t1, t2);
+		getFuncDef(type, id);
 		return;
-	} else if(t1->tokenValue->valueOrIndex == 3){
+	} else if(type == T_VOID){
 		error("void var declaration");
 	}
 	syntax(__func__);
-	if (isLSBracket()) {
-		getLSBracket();
-		getUnsignedNumVal();
-		getRSBracket();
-	}
+
+
+	getVarDefHelper(type, id);
+
+
 	while (isComma()) {
 		getComma();
-		getIdentifier();
-		if (isLSBracket()) {
-			getLSBracket();
-			getUnsignedNumVal();
-			getRSBracket();
-		}
+		string id = getIdentifier();
+		getVarDefHelper(type, id);
 	}
 
 	getSemi();
@@ -120,7 +135,7 @@ void getVarDef() {
 }	
 
 
-void getFuncDef(Token* retType, Token* identifier) {
+void getFuncDef(TableItemDataType retType, string identifier) {
 
 	if (isInFuncDef) {
 		error("Function define within function");
@@ -128,30 +143,34 @@ void getFuncDef(Token* retType, Token* identifier) {
 
 	isInFuncDef = true;
 
-	if (retType->tokenType == RESERVED
-		&& retType->tokenValue->valueOrIndex == 3 
-		&& identifier->tokenType == RESERVED
-		&& identifier->tokenValue->valueOrIndex == 4) {
+	if (retType == T_VOID
+		&& identifier  == "main") {
 		getMainFunc();
 		return;
 	}
 
 	syntax(__func__);
 	getLParen();
-	getParamList();
+	vector<Param> paramList = getParamList();
+	
 	getRParen();
 	getLBracket();
+
+
+	symbolTable->insertSymbol(identifier, new FuncItem(retType, paramList));
+
+	symbolTable->addTable();
+
 	getCompoundStm();
 	getRBracket();
 
+	symbolTable->removeTable();
 
 	isInFuncDef = false;
 
 	if (isFuncRetType()) {
-		Token* retType = new Token(*currentToken);
-		getFuncRetType();
-		Token* identifier = new Token(*currentToken);
-		getIdentifierOrMain();
+		TableItemDataType retType = getFuncRetType();
+		string identifier = getIdentifierOrMain();
 		getFuncDef(retType, identifier);
 	}
 }
@@ -167,28 +186,35 @@ void getCompoundStm() {
 	}
 	getStmList();
 }
-void getParamList() {
+vector<Param> getParamList() {
+	vector<Param> params;
 	syntax(__func__);
 	if (!isType()) {
-		return;
+		return params;
 	}
 	getType();
 	getIdentifier();
 	while (isComma()) {
 		getComma();
-		getType();
-		getIdentifier();
+		TableItemDataType paramTtpe = getType();
+		string paramName = getIdentifier();
 	}
 }
 void getMainFunc() {
 	syntax(__func__);
 	isMainPresent = true;
 
+
 	getLParen();
 	getRParen();
 	getLBracket();
+
+	symbolTable->addTable();
+
 	getCompoundStm();
 	getRBracket();
+
+	symbolTable->removeTable();
 
 	if (currentChar != EOF) {
 		error("File not finished after main");

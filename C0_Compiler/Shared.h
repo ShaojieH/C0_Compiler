@@ -2,7 +2,6 @@
 
 #include "Token.h"
 #include "Const.h"
-#include "Log.h"
 #include "Table.h"
 
 
@@ -16,7 +15,7 @@ fstream inputFile;
 char currentChar;
 Token* currentToken;
 string currentString;
-stack<Table> tables;
+SymbolTable* symbolTable;
 
 int lineCount = 1;
 int charCount = 1;
@@ -26,6 +25,9 @@ void init() {
 	getline(cin, FILE_NAME);
 	FILE_NAME.erase(remove(FILE_NAME.begin(), FILE_NAME.end(), '"'), FILE_NAME.end());
 	inputFile = fstream(FILE_NAME, fstream::in);
+
+	symbolTable = new SymbolTable();
+
 	if (!inputFile.is_open()) {
 		cout << "Unable to open file, exiting"<<endl<<endl;
 		exit(0);

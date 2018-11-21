@@ -261,26 +261,29 @@ void getAssign() {
 }
 
 
-void getCharVal() {
+char getCharVal() {
 	if (isCharVal()) {
+		char c = currentToken->tokenValue->valueOrIndex;
 		getNextToken();
-		return;
+		return c;
 	}
 	error(__func__);
 }
 
-void getType() {
+TableItemDataType getType() {
 	if (isType()) {
+		TableItemDataType type = isInt() ? T_INT : T_CHAR;
 		getNextToken();
-		return;
+		return type;
 	}
 	error(__func__);
 }
 
-void getPlus() {
+int getPlus() {
 	if (isPlus()) {
+		int sign = currentToken->tokenValue->valueOrIndex == 8 ? 1 : -1;
 		getNextToken();
-		return;
+		return sign;
 	}
 	error(__func__);
 }
@@ -293,20 +296,22 @@ void getMul() {
 	error(__func__);
 }
 
-void getUnsignedNumVal() {
+int getUnsignedNumVal() {
 	if (currentToken->tokenType == NUMBER) {
+		int val = currentToken->tokenValue->valueOrIndex;
 		getNextToken();
-		return;
+		return val;
 	}
 	error(__func__);
 }
 
 
-void getNumVal() {
+int getNumVal() {
+	int sign = 1;
 	if (isPlus()) {
-		getPlus();
+		sign = getPlus();
 	}
-	getUnsignedNumVal();
+	return sign * getUnsignedNumVal();
 }
 
 void getIf() {
@@ -389,14 +394,14 @@ void getStrVal() {
 	error(__func__);
 }
 
-FuncRetType getFuncRetType() {
+TableItemDataType getFuncRetType() {
 	if (isFuncRetType()) {
 		int type = currentToken->tokenValue->valueOrIndex;
 		getNextToken();
 		switch (type) {
-		case 1: return  RET_INT;
-		case 2: return  RET_CHAR;
-		case 3:	return  RET_VOID;
+		case 1: return  T_INT;
+		case 2: return  T_CHAR;
+		case 3:	return  T_VOID;
 		default: error(__func__);
 		}
 	}

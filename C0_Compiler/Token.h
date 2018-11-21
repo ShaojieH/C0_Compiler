@@ -8,6 +8,14 @@ class  TokenValue {
 public:
 	string idOrString;
 	int valueOrIndex;
+	TokenValue() {
+		this->idOrString = string();
+		this->valueOrIndex = -1;
+	}
+	TokenValue(string idOrString, int valueOrIndex) {
+		this->idOrString = idOrString;
+		this->valueOrIndex = valueOrIndex;
+	}
 };
 
 class Token {
@@ -124,6 +132,7 @@ public:
 
 	Token() {
 		this->tokenValue = new TokenValue();
+		this->tokenType = INVALID;
 	}
 
 
