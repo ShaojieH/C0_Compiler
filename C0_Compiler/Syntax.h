@@ -161,6 +161,10 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 
 	symbolTable->addTable();
 
+	for (auto param : paramList) {
+		symbolTable->insertSymbol(param.paramName, new VarItem(param.paramType));
+	}
+
 	getCompoundStm();
 	getRBracket();
 
@@ -186,19 +190,26 @@ void getCompoundStm() {
 	}
 	getStmList();
 }
+
+
+
+
 vector<Param> getParamList() {
 	vector<Param> params;
 	syntax(__func__);
-	if (!isType()) {
+	if (isRParen()) {	// no params
 		return params;
 	}
-	getType();
-	getIdentifier();
+	TableItemDataType paramType = getType();
+	string paramName = getIdentifier();
+	params.push_back(Param(paramType, paramName));
 	while (isComma()) {
 		getComma();
-		TableItemDataType paramTtpe = getType();
+		TableItemDataType paramType = getType();
 		string paramName = getIdentifier();
+		params.push_back(Param(paramType, paramName));
 	}
+	return params;
 }
 void getMainFunc() {
 	syntax(__func__);

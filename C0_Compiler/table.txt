@@ -1,0 +1,14 @@
+int minus(int a, int c){
+	const int a = 1, b = 2;
+	return (a - b);
+}
+
+int add(){
+	const int a = 1, b = 2;
+	return (a - b);
+}
+
+
+
+void main(){
+}

@@ -30,12 +30,23 @@ public:
 		this->isArray = isArray;
 		this->arraySize = arraySize;
 	}
+
+	VarItem(TableItemDataType type) {
+		this->dataType = type;
+		this->type = T_VAR;
+		this->isArray = false;
+		this->arraySize = -1;
+	}
 };
 
 class Param {
 public:
 	TableItemDataType paramType;
 	string paramName;
+	Param(TableItemDataType paramType, string paramName) {
+		this->paramType = paramType;
+		this->paramName = paramName;
+	}
 };
 
 class FuncItem : public BaseItem {
@@ -77,8 +88,8 @@ public:
 	void insertItem(string name, BaseItem* item) {
 		switch (item->type) {
 			case T_CONST: {
-				pair<string, ConstItem*> var(name, (ConstItem*)item);
-				constItems.insert(var);
+				pair<string, ConstItem*> cons(name, (ConstItem*)item);
+				constItems.insert(cons);
 				break;
 			}
 			case T_VAR: {
@@ -87,8 +98,14 @@ public:
 				break;
 			}
 			case T_FUNC: {
-				pair<string, FuncItem*> var(name, (FuncItem*)item);
-				funcItems.insert(var);
+				pair<string, FuncItem*> func(name, (FuncItem*)item);
+				funcItems.insert(func);
+
+				//for (auto param : ((FuncItem*)item)->params) {
+				//	pair<string, VarItem*> var(param.paramName, new VarItem(param.paramType));
+				//	varItems.insert(var);
+				//}
+
 				break;
 			}
 			default: {
