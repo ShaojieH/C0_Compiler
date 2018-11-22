@@ -118,8 +118,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Const.h" />
+    <ClInclude Include="IR.h" />
+    <ClInclude Include="IRHelper.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LexHelper.h" />
+    <ClInclude Include="QuadCode.h" />
     <ClInclude Include="SyntaxHelper.h" />
     <ClInclude Include="Lex.h" />
     <ClInclude Include="Shared.h" />
@@ -132,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="error_test.txt" />
+    <Text Include="IR.txt" />
     <Text Include="main.txt" />
     <Text Include="printf.txt" />
     <Text Include="table.txt" />

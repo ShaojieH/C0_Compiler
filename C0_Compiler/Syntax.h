@@ -58,14 +58,20 @@ void getConstIntDefHelper() {
 	string id = getIdentifier();
 	getAssign();
 	int val = getNumVal();
-	symbolTable->insertSymbol(id, new ConstItem(T_INT, TokenValue(string(), val)));
+	bool result = symbolTable->insertSymbol(id, new ConstItem(T_INT, TokenValue(string(), val)));
+	if (result) {
+		ir.constIntDef(id, val);
+	}
 }
 
 void getConstCharDefHelper() {
 	string id = getIdentifier();
 	getAssign();
 	char val = getCharVal();
-	symbolTable->insertSymbol(id, new ConstItem(T_CHAR, TokenValue(string(), val)));
+	bool result = symbolTable->insertSymbol(id, new ConstItem(T_CHAR, TokenValue(string(), val)));
+	if (result) {
+		ir.constCharDef(id, val);
+	}
 }
 
 void getConstDef() {
@@ -94,14 +100,17 @@ void getVarDec() {
 
 void getVarDefHelper(TableItemDataType type, string id) {
 	bool isArray = false;
-	int arraySize = -1;
+	int arraySize = 0;
 	if (isLSBracket()) {
 		getLSBracket();
-		arraySize = getUnsignedNumVal();
+		arraySize = getUnsignedNumVal();	// TODO arraySize not 0
 		isArray = true;
 		getRSBracket();
 	}
-	symbolTable->insertSymbol(id, new VarItem(type, isArray, arraySize));
+	bool result = symbolTable->insertSymbol(id, new VarItem(type, isArray, arraySize));
+	if (result) {
+		ir.varDef(type, id, isArray, arraySize);
+	}
 }
 
 void getVarDef() {
@@ -157,7 +166,10 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 	getLBracket();
 
 
-	symbolTable->insertSymbol(identifier, new FuncItem(retType, paramList));
+	bool result = symbolTable->insertSymbol(identifier, new FuncItem(retType, paramList));
+	if (result) {
+		ir.funcDef(retType, identifier, paramList);
+	}
 
 	symbolTable->addTable();
 

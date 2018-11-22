@@ -1,5 +1,4 @@
-#include "Const.h"
- //#include "Lex.h"
+//#include "Lex.h"
  #include "Syntax.h"
 int main() {
 
@@ -9,6 +8,8 @@ int main() {
 	clock_t begin = clock();
 
 	getProgram();
+
+	ir.printToFile();
 
 	cout << endl<<endl<<"Done. Press any key to quit" << endl;
 	clock_t end = clock();

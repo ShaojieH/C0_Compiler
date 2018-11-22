@@ -1,30 +1,25 @@
 const char c = 'c', d = 'd';
 const int a = 10, b = 20;
 
-int x, y;
-char z, zz, zz;
-int c, cc, ccc;
+int x[10], y;
+char z, zz[15], zzz;
+int cc, ccc;
 
 int add(){
-	const int a = 1, b = 2;
+	const int e = 1, f = 2;
 	printf("");
-	return (a + b);
+	return (e + f);
 
 }
 
-int minus(){
-	const int a = 1, b = 2;
-	return (a - b);
+int minus(int e, int f){
+	return (e - f);
 }
 
 
 
 void main(){
-	const char c = 'c', d = 'd';
-
 	a = c[8*c] + add();
 	add();
 	minus();
-
-
 }

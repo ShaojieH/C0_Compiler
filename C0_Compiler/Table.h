@@ -1,5 +1,5 @@
 #pragma once
-#include "Log.h"
+#include "Token.h"
 class BaseItem {
 public:
 	TableItemType type;

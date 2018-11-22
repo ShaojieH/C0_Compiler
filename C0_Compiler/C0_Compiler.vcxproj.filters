@@ -16,6 +16,9 @@
     <Filter Include="test">
       <UniqueIdentifier>{a708cc11-e547-4e40-b1d5-b904053ae226}</UniqueIdentifier>
     </Filter>
+    <Filter Include="IR">
+      <UniqueIdentifier>{f1af6333-e1e3-4765-af43-b0ad8eecda78}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lex.h">
@@ -45,6 +48,15 @@
     <ClInclude Include="Log.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="IR.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="IRHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="QuadCode.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -69,6 +81,9 @@
     </Text>
     <Text Include="table.txt">
       <Filter>test</Filter>
+    </Text>
+    <Text Include="IR.txt">
+      <Filter>IR</Filter>
     </Text>
   </ItemGroup>
 </Project>

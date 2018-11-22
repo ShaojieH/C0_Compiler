@@ -1,6 +1,5 @@
 #pragma once
-#include "Const.h"
-
+#include "Log.h"
 bool printToken = false;
 bool printTokenWithDetail = true;
 
