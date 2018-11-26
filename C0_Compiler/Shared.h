@@ -7,7 +7,7 @@ using namespace std;
 fstream inputFile;
 //string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\16231232_test.txt";
 //  string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\another_test.txt";
-string FILE_NAME = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\main.txt";
+string FILE_NAME = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\test2.txt";
 
 
 char currentChar;

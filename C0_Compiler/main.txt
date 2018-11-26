@@ -12,14 +12,33 @@ int add(){
 
 }
 
+int add2(int x, int y){
+	return (x + y + 1);
+}
+
 int minus(int e, int f){
 	return (e - f);
 }
 
-
+void calc(){
+	int a, b, c, d, e;
+	e = ((((a*2+b)*c)-d-minus(d,e))/1);
+}
 
 void main(){
+	int fuck;
 	a = c[8*c] + add();
+	c[0] = 1;
 	add();
+	add2(a,b);
 	minus();
+
+	if(a==1){
+		printf("less");
+	}else{
+		printf("more");
+	}
+
+	printf("end");
+
 }

@@ -12,17 +12,17 @@ void getFuncDef(TableItemDataType retType, string identifier);
 void getCompoundStm();
 vector<Param> getParamList();
 void getMainFunc();
-void getExp();
-void getTerm();
-void getFactor();
+string getExp();
+string getTerm();
+string getFactor();
 void getStm();
 void getAssignStm(Token* identifier);
 void getConditionStm();
-void getCondition();
+void getCondition(string label);
 void getLoopStm();
-void getStep();
+int getStep();
 void getFuncCall(Token* identifier);
-void getValParamList();
+vector<string> getValParamList();
 void getStmList();
 void getScanfStm();
 void getPrintfStm();
@@ -103,7 +103,10 @@ void getVarDefHelper(TableItemDataType type, string id) {
 	int arraySize = 0;
 	if (isLSBracket()) {
 		getLSBracket();
-		arraySize = getUnsignedNumVal();	// TODO arraySize not 0
+		arraySize = getUnsignedNumVal();
+		if (arraySize <= 0) {
+			error("Array size illegal");
+		}
 		isArray = true;
 		getRSBracket();
 	}
@@ -232,6 +235,8 @@ void getMainFunc() {
 	getRParen();
 	getLBracket();
 
+	ir.mainDef();
+
 	symbolTable->addTable();
 
 	getCompoundStm();
@@ -243,50 +248,93 @@ void getMainFunc() {
 		error("File not finished after main");
 	}
 }
-void getExp() {
+
+
+
+string getExp() {
 	syntax(__func__);
+	int sign = 1;
 	if (isPlus()) {
-		getPlus();
+		sign = getPlus();
 	}
-	getTerm();
+	string result = getTerm();
+
+	if (sign == -1) {
+		string tmp = ir.getTemp();
+		ir.calc(NEG_STRING, tmp, result);
+		result = tmp;
+	}
+
+	string right;
+	string op;
+	string left = result;
+
 	while (isPlus()) {
-		getPlus();
-		getTerm();
+		result = ir.getTemp();
+		op = getPlusString();
+		right = getTerm();
+		ir.calc(op, result, left, right);
+		left = result;
 	}
+	return left;
 }
-void getTerm() {
+string getTerm() {
 	syntax(__func__);
-	getFactor();
+	string result = getFactor();
+	string right;
+	string op;
+	string left = result;
+
 	while (isMul()) {
-		getMul();
-		getFactor();
+		result = ir.getTemp();
+		op = getMulString();
+		right = getFactor();
+		ir.calc(op, result, left, right);
+		left = result;
 	}
+	return left;
 }
-void getFactor() {
+
+string getFactor() {
 	syntax(__func__);
 	if (isIdentifier()) {
+
 		Token* t1 = new Token(*currentToken); // id
-		getIdentifier();
+		string id = getIdentifier();
+
+		// if (!symbolTable->findGlobalSymbol(id)) {	// TODO move to getID, add getFunction
+		// 	error("Identifier " + id +" not declared");
+		// }
+
 		if (isLSBracket()) {	// array index
 			getLSBracket();
-			getExp();
+			string index = getExp();
 			getRSBracket();
-		} else if (isLParen()) {	// call function
+			string result = ir.getTemp();
+			ir.arrGet(id, index, result);
+			return result;
+		} else if (isLParen()) {	// call function with return value
+			// todo: check if has return 
 			getFuncCall(t1);
+			return "RET";
 		} else {	// just id
-			
+			return id;
 		}
 	}else if (isNumber()) {
-		getNumVal();
+		return to_string(getNumVal());
 	}else if (isCharVal()) {
-		getCharVal();
+		return to_string((int)getCharVal());
 	}else {
 		getLParen();
-		getExp();
+		string result = getExp();
 		getRParen();
+		return result;
 	}
+	error("factor error");
 }
-void getStm() {
+
+
+void getStm() {	// todo: need ir?
 	syntax(__func__);
 	if (isIf()) {
 		getConditionStm();
@@ -302,7 +350,7 @@ void getStm() {
 		if (isLParen()) {	// func call
 			getFuncCall(t1);
 		} else {
-			getAssignStm(t1);
+			getAssignStm(t1);	// assign
 		}
 		getSemi();
 	}else if (isPrintf()) {
@@ -318,83 +366,121 @@ void getStm() {
 		getSemi();
 	}
 }
-void getAssignStm(Token* identifier) {
+void getAssignStm(Token* identifier) {	// TODO : test semantic
 	syntax(__func__);
+	string left = identifier->tokenValue->idOrString;
+	string index;
+	bool isLeftArr = false;
 	if (isLSBracket()) {
 		getLSBracket();
-		getExp();
+		index = getExp();
 		getRSBracket();
+		isLeftArr = true;
 	}
 	getAssign();
-	getExp();
+	string right = getExp();
+	if (isLeftArr) {
+		ir.arrSet(left, index, right);
+	} else {
+		ir.assign(left, right);
+	}
 }
+
+
 void getConditionStm() {
 	syntax(__func__);
 	getIf();
 	getLParen();
-	getCondition();
+	string label = ir.getLabel();
+	getCondition(label);
 	getRParen();
+	
 	getStm();
 	if (isElse()) {
 		getElse();
+		ir.label(label);	
 		getStm();
+	} else {
+		ir.label(label);
 	}
 }
-void getCondition() {
+void getCondition(string label) {
 	syntax(__func__);
-	getExp();
+	string left = getExp();
 	if (isCmp()) {
-		getCmp();
-		getExp();
+		string cmp = getCmp();	// reversed
+		string right = getExp();
+		ir.jmp(cmp, left, right, label);
+	} else {
+		ir.jmp(left, label);
 	}
 }
 void getLoopStm() {
 	syntax(__func__);
-	if (isDo()) {
-		getDo();
+	if (isDo()) {	// do-while
+		getDo();	//do
+		string doLabel = ir.getLabel();
+		ir.label(doLabel);
 		getStm();
-		getWhile();
+		getWhile();	//while
 		getLParen();
-		getCondition();
+		string finishLabel = ir.getLabel();
+		getCondition(finishLabel);
+		ir.jmp(doLabel);
+		ir.label(finishLabel);
 		getRParen();
-	} else {
-		getFor();
+	} else {	// for
+		getFor();	
 		getLParen();
-		getIdentifier();
+		string id = getIdentifier();	// i = 1
 		getAssign();
-		getExp();
+		string initVal = getExp();
 		getSemi();
-		getCondition();
+
+		ir.assign(id, initVal);
+
+		string finishLabel = ir.getLabel();	// i < 100
+		string cmpLabel = ir.getLabel();
+		ir.label(cmpLabel);
+		getCondition(finishLabel);
 		getSemi();
-		getIdentifier();
+
+		string stepLeftID = getIdentifier();	// i = i + 1
 		getAssign();
-		getIdentifier();
-		getPlus();
-		getStep();
+		string stepRightID = getIdentifier();
+		string plusOrSub = getPlusString();
+		string step = to_string(getStep());
 		getRParen();
-		getStm();
+
+		getStm();	//stm
+		ir.calc(plusOrSub, stepLeftID, stepRightID, step);
+		ir.jmp(cmpLabel);
+		ir.label(finishLabel);
 	}
 }
 
-void getStep() {
+int getStep() {
 	syntax(__func__);
-	getUnsignedNumVal();
+	return getUnsignedNumVal();
 }
-void getFuncCall(Token* identifier) {
+void getFuncCall(Token* identifier) {	// TODO: check if param match
 	syntax(__func__);
 	getLParen();
-	getValParamList();
+	vector<string> valParams = getValParamList();
 	getRParen();
+	ir.callFunc(identifier->tokenValue->idOrString, valParams);
 }
 
-void getValParamList() {
+vector<string> getValParamList() {
+	vector<string> valParams;
 	syntax(__func__);
-	if (isRParen())	return;
-	getExp();
+	if (isRParen())	return valParams;
+	valParams.push_back(getExp());
 	while (isComma()) {
 		getComma();
-		getExp();
+		valParams.push_back(getExp());
 	}
+	return valParams;
 }
 
 void getStmList() {
@@ -407,27 +493,32 @@ void getScanfStm() {
 	syntax(__func__);
 	getScanf();
 	getLParen();
-	getIdentifier();
+	string id = getIdentifier();
+	ir.scanf(id);
 	while (isComma()) {
 		getComma();
-		getIdentifier();
+		id = getIdentifier();
+		ir.scanf(id);
 	}
 	getRParen();
+	
 }
 void getPrintfStm() {
 	syntax(__func__);
 	getPrintf();
 	getLParen();
 	if (isStrVal()) {
-		getStrVal();
+		string strVal = getStrVal();
+		ir.printStr(strVal);
 		if (isComma()) {
 			getComma();
-			getExp();
+			string exp = getExp();
+			ir.printExp(exp);
 		}
 	} else {
-		getExp();
+		string exp = getExp();
+		ir.printExp(exp);
 	}
-
 	getRParen();
 }
 void getRetStm() {
@@ -435,7 +526,10 @@ void getRetStm() {
 	getRet();
 	if (isLParen()) {
 		getLParen();
-		getExp();
+		string retVal = getExp();
+		ir.ret(retVal);
 		getRParen();
+	} else {
+		ir.ret();
 	}
 }

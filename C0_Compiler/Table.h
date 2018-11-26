@@ -131,7 +131,7 @@ public:
 		table("Removing table");
 		tables.pop_back();
 	}
-	bool findSymbol(string name) {
+	bool findGlobalSymbol(string name) {
 		for (auto i = tables.rbegin(); i != tables.rend(); i++) {
 			if ((*i)->find(name)) {
 				return true;
@@ -139,8 +139,13 @@ public:
 		}
 		return false;
 	}
+
+	bool findLocalSymbol(string name) {
+		return tables.back()->find(name);
+	}
+
 	bool insertSymbol(string name, BaseItem* item) {
-		if (tables.back()->find(name)) {
+		if (findLocalSymbol(name)) {
 			table("insertion failed, id is:" + name + ", type i :" + to_string(item->type));
 			return false;
 		}

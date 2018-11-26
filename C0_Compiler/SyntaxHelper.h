@@ -257,7 +257,6 @@ void getAssign() {
 		return;
 	}
 	error(__func__);
-	currentToken->printAnyway();
 }
 
 
@@ -288,10 +287,20 @@ int getPlus() {
 	error(__func__);
 }
 
-void getMul() {
-	if (isMul()) {
+string getPlusString() {
+	if (isPlus()) {
+		string plusOrString = currentToken->tokenValue->valueOrIndex == 8 ? ADD_STRING : SUB_STRING;
 		getNextToken();
-		return;
+		return plusOrString;
+	}
+	error(__func__);
+}
+
+string getMulString() {
+	if (isMul()) {
+		string mulOrDiv = currentToken->tokenValue->valueOrIndex == 10 ? MUL_STRING : DIV_STRING;
+		getNextToken();
+		return mulOrDiv;
 	}
 	error(__func__);
 }
@@ -330,10 +339,41 @@ void getElse() {
 	error(__func__);
 }
 
-void getCmp() {
+string getCmp() {
 	if (isCmp()) {
+		string cmp;
+		switch (currentToken->tokenValue->valueOrIndex)
+		{
+		case 1: {	//	<
+			cmp = BGE_STRING;
+			break;
+		}
+		case 2: {	//	<=
+			cmp = BGT_STRING;
+			break;
+		}
+		case 3: {	//	>
+			cmp = BLE_STRING;
+			break;
+		}
+		case 4: {	//	>=
+			cmp = BLT_STRING;
+			break;
+		}
+		case 5: {	//	!=
+			cmp = BEQ_STRING;
+			break;
+		}
+		case 6: {	//	==
+			cmp = BNE_STRING;
+			break;
+		}
+		default:
+			error("Invalid cmp");
+			break;
+		}
 		getNextToken();
-		return;
+		return cmp;
 	}
 	error(__func__);
 }
@@ -386,10 +426,11 @@ void getRet() {
 	error(__func__);
 }
 
-void getStrVal() {
+string getStrVal() {
 	if (isStrVal()) {
+		string strVal = currentToken->tokenValue->idOrString;
 		getNextToken();
-		return;
+		return strVal;
 	}
 	error(__func__);
 }

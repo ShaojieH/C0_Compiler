@@ -1,0 +1,10 @@
+void main(){
+	int i;
+	do{
+		printf("fuck");
+		i = i + 1;
+	}while(i < 10)
+	printf("shit");
+	printf(i);
+	printf("fuck", i + 1);
+}

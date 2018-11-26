@@ -9,7 +9,7 @@ int main() {
 
 	getProgram();
 
-	ir.printToFile();
+	// ir.printToFile(); // move to destructor
 
 	cout << endl<<endl<<"Done. Press any key to quit" << endl;
 	clock_t end = clock();

@@ -19,7 +19,11 @@ const string IRCODE_FILE_NAME = "IR.txt";
 class IR{
 private:
 	vector<QuadCode> IRCode;
+	// int tempCount = 0;
 public:
+
+	//utils
+
 	void printToFile() {
 		ofstream irFile;
 		irFile.open(IRCODE_FILE_NAME);
@@ -29,6 +33,18 @@ public:
 		}
 		irFile.close();
 	}
+
+	string getTemp() {
+		static int tempCount = 0;
+		return "TMP" + to_string((tempCount)++);
+	}
+
+	string getLabel() {
+		static int labelCount = 0;
+		return "LABEL" + to_string((labelCount)++);
+	}
+
+	// translate
 
 	void constIntDef(string name, int val) {
 		IRCode.push_back(QuadCode(CONST_STRING,INT_STRING, name, to_string(val)));
@@ -55,6 +71,14 @@ public:
 		funcParams(params);
 	}
 
+	void mainDef() {
+		IRCode.push_back(QuadCode(
+			FUNC_STRING,
+			DEF_STRING,
+			toString(T_VOID),
+			MAIN_STRING));
+	}
+
 	void funcParams(vector<Param> params) {
 		for (Param param : params) {
 			IRCode.push_back(QuadCode(
@@ -64,4 +88,133 @@ public:
 				param.paramName));
 		}
 	}
+
+
+
+
+	void arrGet(string arrName, string index, string des) {
+		IRCode.push_back(QuadCode(
+			ARRGET_STRING,
+			des,
+			arrName,
+			index
+	
+		));
+	}
+
+	void arrSet(string arrName, string index, string src) {
+		IRCode.push_back(QuadCode(
+			ARRSET_STRING,
+			arrName,
+			index,
+			src
+		));
+	}
+
+	void calc(string op, string des, string left, string right = "*") {
+		IRCode.push_back(QuadCode(
+			op,
+			des,
+			left,
+			right
+		));
+	}
+
+
+	void callFunc(string funcName, vector<string> valParams) {
+		for (string valParam : valParams) {
+			IRCode.push_back(QuadCode(
+				CALL_STRING,
+				PARAM_STRING,
+				valParam
+			));
+		}
+		IRCode.push_back(QuadCode(
+			CALL_STRING,
+			funcName
+		));
+	}
+
+	void assign(string left, string right) {
+		IRCode.push_back(QuadCode(
+			ASS_STRING,
+			left,
+			right
+		));
+	}
+	void ret(string val) {
+		IRCode.push_back(QuadCode(
+			RETURN_STRING,
+			val
+		));
+	}
+
+	void ret() {
+		IRCode.push_back(QuadCode(
+			RETURN_STRING
+		));
+	}
+
+	void label(string label) {
+		IRCode.push_back(QuadCode(
+			LABEL_STRING,
+			label,
+			":"
+		));
+	}
+
+	void jmp(string cmp, string left, string right, string label) {
+		IRCode.push_back(QuadCode(
+			cmp,
+			left,
+			right,
+			label
+		));
+	}
+
+	void jmp(string value, string label) {	// test if not zero
+		IRCode.push_back(QuadCode(
+			BEQZ_STRING,
+			value,
+			label
+		));
+	}
+
+	void jmp(string label) {	// j
+		IRCode.push_back(QuadCode(
+			J_STRING,
+			label
+		));
+	}
+
+
+	void printStr(string str) {
+		IRCode.push_back(QuadCode(
+			PRINTF_STRING,
+			STR_STRING,
+			str
+		));
+	}
+
+	void printExp(string str) {
+		IRCode.push_back(QuadCode(
+			PRINTF_STRING,
+			EXP_STRING,
+			str
+		));
+	}
+
+	void scanf(string id) {
+		IRCode.push_back(QuadCode(
+			SCANF_STRING,
+			id
+		));
+	}
+
+
+	~IR()
+	{
+		printToFile();
+	}
+
 };
