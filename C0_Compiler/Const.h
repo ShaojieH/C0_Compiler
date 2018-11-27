@@ -18,6 +18,15 @@ using namespace std;
 //	RET_INT, RET_CHAR, RET_VOID
 //}FuncRetType;
 
+const string FUNC_STRING = "FUNC";
+const string CONST_STRING = "CONST";
+const string VAR_STRING = "VAR";
+const string INT_STRING = "INT";
+const string CHAR_STRING = "CHAR";
+const string VOID_STRING = "VOID";
+const string STR_STRING = "STR";
+const string EXP_STRING = "EXP";
+
 typedef enum  TokenType{
 	ID, NUMBER, 
 	CHAR, STRING, 

@@ -16,12 +16,12 @@ string getExp();
 string getTerm();
 string getFactor();
 void getStm();
-void getAssignStm(Token* identifier);
+void getAssignStm(string identifier);
 void getConditionStm();
 void getCondition(string label);
 void getLoopStm();
 int getStep();
-void getFuncCall(Token* identifier);
+void getFuncCall(string identifier);
 vector<string> getValParamList();
 void getStmList();
 void getScanfStm();
@@ -58,9 +58,9 @@ void getConstIntDefHelper() {
 	string id = getIdentifier();
 	getAssign();
 	int val = getNumVal();
-	bool result = symbolTable->insertSymbol(id, new ConstItem(T_INT, TokenValue(string(), val)));
+	BaseItem* result = symbolTable->insertSymbol(id, new ConstItem(T_INT, TokenValue(string(), val)));
 	if (result) {
-		ir.constIntDef(id, val);
+		ir.constIntDef(result->irName, val);
 	}
 }
 
@@ -68,9 +68,9 @@ void getConstCharDefHelper() {
 	string id = getIdentifier();
 	getAssign();
 	char val = getCharVal();
-	bool result = symbolTable->insertSymbol(id, new ConstItem(T_CHAR, TokenValue(string(), val)));
+	BaseItem* result = symbolTable->insertSymbol(id, new ConstItem(T_CHAR, TokenValue(string(), val)));
 	if (result) {
-		ir.constCharDef(id, val);
+		ir.constCharDef(result->irName, val);
 	}
 }
 
@@ -110,9 +110,9 @@ void getVarDefHelper(TableItemDataType type, string id) {
 		isArray = true;
 		getRSBracket();
 	}
-	bool result = symbolTable->insertSymbol(id, new VarItem(type, isArray, arraySize));
+	BaseItem* result = symbolTable->insertSymbol(id, new VarItem(type, isArray, arraySize));
 	if (result) {
-		ir.varDef(type, id, isArray, arraySize);
+		ir.varDef(type, result->irName, isArray, arraySize);
 	}
 }
 
@@ -169,9 +169,9 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 	getLBracket();
 
 
-	bool result = symbolTable->insertSymbol(identifier, new FuncItem(retType, paramList));
+	BaseItem* result = symbolTable->insertSymbol(identifier, new FuncItem(retType, paramList));
 	if (result) {
-		ir.funcDef(retType, identifier, paramList);
+		ir.funcDef(retType, result->irName, paramList);
 	}
 
 	symbolTable->addTable();
@@ -300,7 +300,7 @@ string getFactor() {
 	if (isIdentifier()) {
 
 		Token* t1 = new Token(*currentToken); // id
-		string id = getIdentifier();
+		string id = getIdentifierFromTable();
 
 		// if (!symbolTable->findGlobalSymbol(id)) {	// TODO move to getID, add getFunction
 		// 	error("Identifier " + id +" not declared");
@@ -315,7 +315,7 @@ string getFactor() {
 			return result;
 		} else if (isLParen()) {	// call function with return value
 			// todo: check if has return 
-			getFuncCall(t1);
+			getFuncCall(id);
 			return "RET";
 		} else {	// just id
 			return id;
@@ -344,13 +344,13 @@ void getStm() {	// todo: need ir?
 		getLBracket();
 		getStmList();
 		getRBracket();
-	}else if (isIdentifier()) {
-		Token* t1 = new Token(*currentToken);		// id
-		getIdentifier();
+	}else if (isIdentifier()) {// id
+		
+		string id = getIdentifierFromTable();
 		if (isLParen()) {	// func call
-			getFuncCall(t1);
+			getFuncCall(id);
 		} else {
-			getAssignStm(t1);	// assign
+			getAssignStm(id);	// assign
 		}
 		getSemi();
 	}else if (isPrintf()) {
@@ -366,9 +366,9 @@ void getStm() {	// todo: need ir?
 		getSemi();
 	}
 }
-void getAssignStm(Token* identifier) {	// TODO : test semantic
+void getAssignStm(string identifier) {	// TODO : test semantic
 	syntax(__func__);
-	string left = identifier->tokenValue->idOrString;
+	string left = identifier;
 	string index;
 	bool isLeftArr = false;
 	if (isLSBracket()) {
@@ -432,7 +432,7 @@ void getLoopStm() {
 	} else {	// for
 		getFor();	
 		getLParen();
-		string id = getIdentifier();	// i = 1
+		string id = getIdentifierFromTable();	// i = 1
 		getAssign();
 		string initVal = getExp();
 		getSemi();
@@ -445,9 +445,9 @@ void getLoopStm() {
 		getCondition(finishLabel);
 		getSemi();
 
-		string stepLeftID = getIdentifier();	// i = i + 1
+		string stepLeftID = getIdentifierFromTable();	// i = i + 1
 		getAssign();
-		string stepRightID = getIdentifier();
+		string stepRightID = getIdentifierFromTable();
 		string plusOrSub = getPlusString();
 		string step = to_string(getStep());
 		getRParen();
@@ -463,12 +463,12 @@ int getStep() {
 	syntax(__func__);
 	return getUnsignedNumVal();
 }
-void getFuncCall(Token* identifier) {	// TODO: check if param match
+void getFuncCall(string identifier) {	// TODO: check if param match
 	syntax(__func__);
 	getLParen();
 	vector<string> valParams = getValParamList();
 	getRParen();
-	ir.callFunc(identifier->tokenValue->idOrString, valParams);
+	ir.callFunc(identifier, valParams);
 }
 
 vector<string> getValParamList() {
@@ -493,11 +493,11 @@ void getScanfStm() {
 	syntax(__func__);
 	getScanf();
 	getLParen();
-	string id = getIdentifier();
+	string id = getIdentifierFromTable();
 	ir.scanf(id);
 	while (isComma()) {
 		getComma();
-		id = getIdentifier();
+		id = getIdentifierFromTable();
 		ir.scanf(id);
 	}
 	getRParen();

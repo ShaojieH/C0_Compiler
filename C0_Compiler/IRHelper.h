@@ -2,14 +2,7 @@
 
 #include "QuadCode.h"
 
-const string FUNC_STRING = "FUNC";
-const string CONST_STRING = "CONST";
-const string VAR_STRING = "VAR";
-const string INT_STRING = "INT";
-const string CHAR_STRING = "CHAR";
-const string VOID_STRING = "VOID";
-const string STR_STRING = "STR";
-const string EXP_STRING = "EXP";
+
 
 const string DEF_STRING = "DEF";
 const string PARAM_STRING = "PARAM";

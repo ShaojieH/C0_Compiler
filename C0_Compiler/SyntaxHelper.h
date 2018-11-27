@@ -237,6 +237,20 @@ string getIdentifier() {
 	error(__func__);
 }
 
+string getIdentifierFromTable () {
+	if (isIdentifier()) {
+		string id = currentToken->tokenValue->idOrString;
+		getNextToken();
+		BaseItem* result =  symbolTable->findGlobalSymbol(id);
+		if (result) {
+			return result->irName;
+		} else {
+			error("Id not declared");
+		}
+	}
+	error(__func__);
+}
+
 string getIdentifierOrMain() {
 	if (isIdentifier()) {
 		string id = currentToken->tokenValue->idOrString;
