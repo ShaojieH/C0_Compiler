@@ -5,12 +5,10 @@
 
 using namespace std;
 fstream inputFile;
-//string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\16231232_test.txt";
-//  string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\another_test.txt";
-string FILE_NAME = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\fac.txt";
+string FILE_NAME = "..\\..\\C0_Compiler\\C0_Compiler\\fac.txt";
 
-const string MARS_PATH = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\Mars.jar";
-const string ASM_PATH = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\Mips.asm";
+const string MARS_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mars.jar";
+const string ASM_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mips.asm";
 const string MARS_COMMAND = "java -jar " + MARS_PATH + " 100000 " + ASM_PATH;
 
 char currentChar;
