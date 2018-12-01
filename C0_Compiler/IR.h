@@ -77,14 +77,12 @@ public:
 		));
 	}
 
-	void funcDef(TableItemDataType retType, string identifier, vector<Param> params) {
+	void funcDef(TableItemDataType retType, string identifier) {
 		IRCode.push_back(QuadCode(
 			FUNC_STRING,
 			DEF_STRING,
 			toString(retType),
 			identifier));
-
-		funcParams(params);
 	}
 
 
@@ -97,14 +95,13 @@ public:
 			MAIN_STRING));
 	}
 
-	void funcParams(vector<Param> params) {
-		for (Param param : params) {
+	void funcParam(Param param) {
 			IRCode.push_back(QuadCode(
 				FUNC_STRING,
 				PARAM_STRING,
 				toString(param.paramType),
-				param.paramName));
-		}
+				param.irName));
+		
 	}
 
 
@@ -130,7 +127,7 @@ public:
 	}
 
 	void calc(string op, string des, string left, string right = "*") {
-		if (isNumber(left) && !isNumber(right)) {
+		if (isNumber(left) && right != "*" && !isNumber(right) ) {
 			IRCode.push_back(QuadCode(
 				op,
 				des,
@@ -210,7 +207,7 @@ public:
 
 	void jmp(string label) {	// j
 		IRCode.push_back(QuadCode(
-			J_STRING,
+			B_STRING,
 			label
 		));
 	}

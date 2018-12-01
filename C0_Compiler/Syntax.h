@@ -171,15 +171,19 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 
 	BaseItem* result = symbolTable->insertSymbol(identifier, new FuncItem(retType, paramList));
 	if (result) {
-		ir.funcDef(retType, result->irName, paramList);
+		ir.funcDef(retType, result->irName);
 	}
 
 	symbolTable->addTable();
 
 	for (auto param : paramList) {
-		symbolTable->insertSymbol(param.paramName, new VarItem(param.paramType));
+		BaseItem* result = symbolTable->insertSymbol(param.paramName, new VarItem(param.paramType));
+		if (result) {
+			param.irName = result->irName;
+			ir.funcParam(param);
+		}
 	}
-
+	
 	getCompoundStm();
 	getRBracket();
 
@@ -391,17 +395,22 @@ void getConditionStm() {
 	syntax(__func__);
 	getIf();
 	getLParen();
-	string label = ir.getLabel();
-	getCondition(label);
+	string elseStart = ir.getLabel();
+	getCondition(elseStart);
 	getRParen();
 	
 	getStm();
+
 	if (isElse()) {
+		string ifEnd = ir.getLabel();
+		ir.jmp(ifEnd);
+
 		getElse();
-		ir.label(label);	
+		ir.label(elseStart);
 		getStm();
+		ir.label(ifEnd);
 	} else {
-		ir.label(label);
+		ir.label(elseStart);
 	}
 }
 void getCondition(string label) {

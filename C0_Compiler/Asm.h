@@ -22,19 +22,21 @@ public:
 	void printAsm() {
 		asmFile << ".data" << endl<<endl;
 		for (string str : data) {
-			asmFile << str << endl;
+			asmFile << str ;
 		}
 		asmFile << endl;
 		for (string str : strings) {
-			asmFile << str << endl;
+			asmFile << str;
 		}
 		asmFile << endl << ".text" << endl<<endl;
 		for (string str : consts) {
-			asmFile << str << endl;
+			asmFile << str;
 		}
-		asmFile << endl;
+
+		asmFile << endl<<"b MAIN"<<endl;
+
 		for (string str : text) {
-			asmFile << str << endl;
+			asmFile << str;
 		}
 		asmFile << endl;
 	}
@@ -47,16 +49,16 @@ public:
 
 	void translate(QuadCode code) {
 		if (code.first == CONST_STRING) {
-			this->data.push_back(spaceAlloc(code.third, dataSize));
-			this->consts.push_back(numToAddrLabel(code.third, code.fourth));
+			this->data.push_back(spaceAlloc(code.third, DATA_SIZE));
+			this->consts.push_back(moveImmediateToLabel(code.third, code.fourth));
 		}
 
 		else if (code.first == VAR_STRING) {
-			this->data.push_back(spaceAlloc(code.third, dataSize * stoi(code.fourth)));
+			this->data.push_back(spaceAlloc(code.third, DATA_SIZE * stoi(code.fourth)));
 		}
 
 		else if (code.first == TEMP_STRING) {
-			this->data.push_back(spaceAlloc(code.second, dataSize));
+			this->data.push_back(spaceAlloc(code.second, DATA_SIZE));
 		}
 
 		else if (code.first == FUNC_STRING) {
@@ -75,6 +77,27 @@ public:
 		else if (code.first == NEG_STRING) {
 			this->text.push_back(neg(code));
 		}
+
+		else if (code.first == ASS_STRING) {
+			this->text.push_back(assign(code.second, code.third));
+		}
+		else if (code.first == ARRGET_STRING) {
+			this->text.push_back(arrGet(code.second, code.third, code.fourth));
+		}
+		else if (code.first == ARRSET_STRING) {
+			this->text.push_back(arrSet(code.second, code.third, code.fourth));
+		}
+		else if (code.first == LABEL_STRING) {
+			this->text.push_back(label(code.second));
+		}
+
+		else if (isCompare(code.first)) {
+			this->text.push_back(compare(code));
+		}
+		else if (code.first == B_STRING) {
+			this->text.push_back(branch(code.second));
+		}
+
 		else if (code.first == PRINTF_STRING) {
 			if (code.second == STR_STRING) {
 				this->strings.push_back(stringAlloc(code.third, code.fourth));

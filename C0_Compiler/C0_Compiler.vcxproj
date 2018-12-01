@@ -136,9 +136,11 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="assign.txt" />
     <Text Include="calc.txt" />
     <Text Include="error_test.txt" />
     <Text Include="for.txt" />
+    <Text Include="if.txt" />
     <Text Include="IR.txt" />
     <Text Include="main.txt" />
     <Text Include="memo.txt" />
@@ -148,6 +150,7 @@
     <Text Include="test2.txt" />
     <Text Include="test3.txt" />
     <Text Include="dowhile.txt" />
+    <Text Include="Test.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,0 +1,29 @@
+ARRSET VAR1 4 3	=>
+li t0, 3
+sw t0, var1 + 16
+
+ARRSET VAR3 1 tmp =>
+lw t0, tmp
+sw t0, var3 + 4
+
+ARRSET VAR3 tmp 1 =>
+lw t0, tmp
+sll t0, t0, 2
+li t1, 1
+sw t1, var3(t0)
+
+ARRSET VAR3 VAR2 TMP2 =>
+lw t0, var2
+sll t0, t0, 2
+lw t1, tmp2
+sw t1, var3(t0)
+
+ARRGET TMP0 VAR1 2	=>	
+lw t0, var1 + 8
+sw t0, tmp0
+
+ARRGET TMP2 VAR3 VAR2 =>
+lw t0, var2
+sll t0, t0, 2
+lw t0, var3(t0)
+sw t0, tmp2

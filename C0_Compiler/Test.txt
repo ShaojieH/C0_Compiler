@@ -1,0 +1,7 @@
+void func(int a, int b){
+	int c, d;
+	func(b,a);
+}
+void main(){
+	func(1,2);
+}

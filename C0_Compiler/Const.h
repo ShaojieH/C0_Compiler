@@ -52,7 +52,7 @@ const string BLT_STRING = "BLT";	// <
 const string BEQ_STRING = "BEQ";	// ==
 const string BNE_STRING = "BNE";	// !=
 const string BEQZ_STRING = "BEQZ";	//  == 0
-const string J_STRING = "J";
+const string B_STRING = "B";
 
 
 const string PRINTF_STRING = "PRINTF";

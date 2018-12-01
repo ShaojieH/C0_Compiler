@@ -49,7 +49,7 @@ public:
 
 int VarItem::varItemCount = 0;
 
-class Param {
+class Param : public BaseItem {
 public:
 	TableItemDataType paramType;
 	string paramName;

@@ -107,5 +107,14 @@
     <Text Include="calc.txt">
       <Filter>test</Filter>
     </Text>
+    <Text Include="assign.txt">
+      <Filter>test</Filter>
+    </Text>
+    <Text Include="Test.txt">
+      <Filter>test</Filter>
+    </Text>
+    <Text Include="if.txt">
+      <Filter>test</Filter>
+    </Text>
   </ItemGroup>
 </Project>

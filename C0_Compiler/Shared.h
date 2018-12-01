@@ -7,7 +7,7 @@ using namespace std;
 fstream inputFile;
 //string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\16231232_test.txt";
 //  string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\another_test.txt";
-string FILE_NAME = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\calc.txt";
+string FILE_NAME = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\dowhile.txt";
 
 const string MARS_PATH = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\Mars.jar";
 const string ASM_PATH = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\Mips.asm";
@@ -38,6 +38,7 @@ void init() {
 
 	if (!inputFile.is_open()) {
 		cout << "Unable to open file, exiting"<<endl<<endl;
+		getchar();
 		exit(0);
 	}
 	else {

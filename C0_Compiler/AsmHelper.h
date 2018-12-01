@@ -1,7 +1,14 @@
 #pragma once
 #include "QuadCode.h"
 
-const int dataSize = 4;
+const int DATA_SIZE = 4;
+const string t0 = "$t0";
+const string t1 = "$t1";
+const string t2 = "$t2";
+const string sp = "$sp";
+const string ra = "$ra";
+const string a0 = "$a0";
+const string v0 = "$v0";
 
 bool isNumber(const string& s) {
 	auto it = s.begin();
@@ -9,62 +16,102 @@ bool isNumber(const string& s) {
 	return !s.empty() && it == s.end();
 }
 
+bool isCompare(string op) {
+	return op == BGE_STRING 
+		|| op == BGT_STRING 
+		|| op == BLE_STRING 
+		|| op == BLT_STRING 
+		|| op == BEQ_STRING 
+		|| op == BNE_STRING 
+		|| op == BEQZ_STRING;
+}
 
-string spaceAlloc(string name, int size) {
-	return name + ": .space " + to_string(size);
+string moveLabelToReg(string regName, string label) {
+	return "lw " + regName + ", " + label + "\n";
+}
+string moveRegToLabel(string label, string regName) {
+	return "sw " + regName + ", " + label + "\n";
 }
 
 
+string moveImmediateToReg(string regName, string val) {
+	return "li " + regName + ", " + val + "\n";
+}
+
+string moveImmediateToLabel(string addrLabel, string numVal) {
+	return moveImmediateToReg(t0, numVal)
+		+ moveRegToLabel(addrLabel, t0);
+}
+
+string moveLabelToLabel(string dst, string src) {
+	return moveLabelToReg(t0, src)
+		+ moveRegToLabel(dst, t0);
+}
+
+string moveLabelOrImmeToReg(string regName, string val) {
+	return isNumber(val) ? moveImmediateToReg(regName, val) : moveLabelToReg(regName, val);
+}
+
+string moveLabelOrImmeToLabel(string label, string val) {
+	return isNumber(val) ? moveImmediateToLabel(label, val) : moveLabelToLabel(label, val);
+}
+
+string moveAddrToReg(string regName, string addr) {
+	return "la " + regName + ", " + addr + "\n";
+}
+
+
+string spaceAlloc(string name, int size) {
+	return name + ": .space " + to_string(size) + "\n";
+}
 
 string stringAlloc(string label, string str) {
-	return label + ": .asciiz \"" + str + "\"";
+	return label + ": .asciiz \"" + str + "\"" + "\n";
 }
 
 string label(string label) {
-	return label + ":";
+	return "\n" + label + ":" + "\n\n";
+}
+
+string syscall() {
+	return SYSCALL_STRING + "\n";
 }
 
 string printString(string addr) {
-	string syscallCode = "li $v0, 4\n";
-	string moveToa0 = "la $a0, " + addr + "\n";
-	
-	return syscallCode + moveToa0 + SYSCALL_STRING;
+	return moveImmediateToReg(v0, to_string(4)) 
+		+ moveAddrToReg(a0, addr) 
+		+ syscall();
 }
 
 string printInt(string val) {
-	string syscallCode = "li $v0, 1\n";
+	string syscallCode = moveImmediateToReg(v0, to_string(1));
 	string moveToa0;
 
 	if (isNumber(val)) {
-		moveToa0 = "li $a0, " + val + "\n";
+		moveToa0 = moveImmediateToReg(a0, val);
 	} else {
-		moveToa0 = "lw $a0, " + val + "($0)\n";
+		moveToa0 = moveLabelToReg(a0, val);
 	}
-	return syscallCode + moveToa0 + SYSCALL_STRING;
+	return syscallCode + moveToa0 + syscall();
 }
 
 string printNewLine() {
-	return "la $a0, " + ENTER_STRING + "\n"
-		+ "li $v0, 4\n"
-		+ SYSCALL_STRING;
+	return printString(ENTER_STRING);
 }
 
-string numToAddrLabel(string addrLabel, string numVal) {
-	return "li $t0, " + numVal + "\n"
-		+ "sw $t0, " + addrLabel;
-}
+
 
 string neg(QuadCode code) {
 	if (isNumber(code.third)) {
-		return numToAddrLabel(code.second, "-"+code.third);
+		return moveImmediateToLabel(code.second, "-"+code.third);
 	} else {
-		return "lw $t0, " + code.third + "\n"
+		return moveLabelToReg(t0, code.third)
 			+ "neg $t0 $t0" + "\n"
-			+ "sw $t0 " + code.second;
+			+ moveRegToLabel(code.second, t0);
 	}
 }
 
-string calculate(string op, int left, int right) {
+string calculateImme(string op, int left, int right) {
 	if (op == ADD_STRING) {
 		return to_string(left + right);
 	}
@@ -79,28 +126,80 @@ string calculate(string op, int left, int right) {
 	}
 }
 
+string calculate(string op, string des, string left, string right) {
+	return op + " " + des +  ", " + left + ", " +  right + "\n";
+}
+
+string binary(string op, string op1, string op2) {
+	return op + " " + op1 + ", " + op2 + "\n";
+}
+
 string math(QuadCode code) {
 	string op = code.first;
 	string des = code.second;
 
 	if (isNumber(code.third)) {	// add temp0 1 2
-		return numToAddrLabel(code.second, calculate(
+		return moveImmediateToLabel(code.second, calculateImme(
 				op,
 				stoi(code.third),
 				stoi(code.fourth)));
-
 	} else {
 		string left = code.third;
 		transform(op.begin(), op.end(), op.begin(), ::tolower);
-		if (isNumber(code.fourth)) {	//add temp0 temp1 1
-			return  "lw $t1, " + left + "\n"
-				+ op + " $t0, $t1, " + code.fourth + "\n"
-				+ "sw $t0 " + des;
-		} else {	//add temo0 temp1 temp2
-			return   "lw $t1, " + left + "\n"
-				+ "lw $t2, " + code.fourth + "\n"
-				+ op + " " + " $t0, $t1, $t2" + "\n"
-				+ "sw $t0 " + des;
-		}
+		return  moveLabelToReg(t1, left)
+			+ moveLabelOrImmeToReg(t2, code.fourth)
+			+ calculate(op, t0, t1, t2)
+			+ moveRegToLabel(des, t0);
 	}
+}
+
+string assign(string dst, string src) {
+	if (isNumber(src)) {
+		return moveImmediateToLabel(dst, src);
+	} else {
+		return moveLabelToLabel(dst, src);
+	}
+}
+
+string getOffset(string numVal) {
+	return to_string(stoi(numVal) * DATA_SIZE);
+}
+
+string arrGet(string dstLabel, string srcLabel, string index) {
+	if (isNumber(index)) {	// ARRGET TMP0 VAR1 2
+		string offset = getOffset(index);
+		return moveLabelToLabel(dstLabel, srcLabel + " + " + offset);
+	} else {
+		return moveLabelToReg(t1, index)	// ARRGET TMP2 VAR3 VAR2
+			+ calculate("sll", t1, t1, "2")
+			+ moveLabelToLabel(dstLabel, srcLabel + "(" + t1 + ")");
+	}
+}
+
+string arrSet(string dstLabel, string index, string src) {
+	if (isNumber(index)) {
+		string offset = getOffset(index);
+		return moveLabelOrImmeToLabel(dstLabel + " + " + offset, src);
+	} else {
+		return moveLabelToReg(t1, index)
+			+ calculate("sll", t1, t1, "2")
+			+ moveLabelOrImmeToLabel(dstLabel + "(" + t1 + ")", src);
+	}
+}
+
+string compare(QuadCode code) {
+	string cmp = code.first;
+	transform(cmp.begin(), cmp.end(), cmp.begin(), ::tolower);
+	if (code.first == BEQZ_STRING) {
+		return moveLabelOrImmeToReg(t0, code.second)
+			+ binary(cmp, t0, code.third);
+	} else {
+		return moveLabelOrImmeToReg(t0, code.second)
+			+ moveLabelOrImmeToReg(t1, code.third)
+			+ calculate(cmp, t0, t1, code.fourth);
+	}
+}
+
+string branch(string label) {
+	return "\nb " + label + "\n";
 }
