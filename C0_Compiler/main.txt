@@ -40,5 +40,8 @@ void main(){
 	}
 
 	printf("end");
+	printf('c');
+	printf(1);
+	printf(a);
 
 }

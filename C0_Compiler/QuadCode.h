@@ -3,9 +3,10 @@
 #include "Table.h"
 
 class QuadCode {
-private:
-	string first, second, third, fourth;
 public:
+
+	string first, second, third, fourth;
+
 	QuadCode(string first, string second = "*", string third = "*", string fourth = "*") {
 		this->first = first;
 		this->second = second;

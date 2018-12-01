@@ -100,7 +100,7 @@ void getVarDec() {
 
 void getVarDefHelper(TableItemDataType type, string id) {
 	bool isArray = false;
-	int arraySize = 0;
+	int arraySize = 1;
 	if (isLSBracket()) {
 		getLSBracket();
 		arraySize = getUnsignedNumVal();

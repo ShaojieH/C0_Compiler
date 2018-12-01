@@ -117,11 +117,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AsmHelper.h" />
     <ClInclude Include="Const.h" />
     <ClInclude Include="IR.h" />
     <ClInclude Include="IRHelper.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="LexHelper.h" />
+    <ClInclude Include="Asm.h" />
     <ClInclude Include="QuadCode.h" />
     <ClInclude Include="SyntaxHelper.h" />
     <ClInclude Include="Lex.h" />
@@ -134,11 +136,13 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="calc.txt" />
     <Text Include="error_test.txt" />
     <Text Include="for.txt" />
     <Text Include="IR.txt" />
     <Text Include="main.txt" />
     <Text Include="memo.txt" />
+    <Text Include="Mips.asm" />
     <Text Include="printf.txt" />
     <Text Include="table.txt" />
     <Text Include="test2.txt" />

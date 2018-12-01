@@ -19,6 +19,9 @@
     <Filter Include="IR">
       <UniqueIdentifier>{f1af6333-e1e3-4765-af43-b0ad8eecda78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mips">
+      <UniqueIdentifier>{e702331e-2896-4056-8385-d0a4b10ec5c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lex.h">
@@ -57,6 +60,12 @@
     <ClInclude Include="QuadCode.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Asm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="AsmHelper.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -90,6 +99,12 @@
       <Filter>test</Filter>
     </Text>
     <Text Include="dowhile.txt">
+      <Filter>test</Filter>
+    </Text>
+    <Text Include="Mips.asm">
+      <Filter>Mips</Filter>
+    </Text>
+    <Text Include="calc.txt">
       <Filter>test</Filter>
     </Text>
   </ItemGroup>

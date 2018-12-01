@@ -7,8 +7,11 @@ using namespace std;
 fstream inputFile;
 //string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\16231232_test.txt";
 //  string FILE_NAME = "E:\\Programming\\compiler\\my_c0\\another_test.txt";
-string FILE_NAME = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\main.txt";
+string FILE_NAME = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\calc.txt";
 
+const string MARS_PATH = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\Mars.jar";
+const string ASM_PATH = "C:\\Users\\Tom\\source\\repos\\C0_Compiler\\C0_Compiler\\Mips.asm";
+const string MARS_COMMAND = "java -jar " + MARS_PATH + " 100000 " + ASM_PATH;
 
 char currentChar;
 Token* currentToken;
@@ -54,4 +57,24 @@ bool isFileValid() {
 	return !inputFile.eof();
 }
 
+
+
+
+string exec(const char* cmd) {
+	array<char, 128> buffer;
+	std::string result;
+	std::unique_ptr<FILE, decltype(&_pclose)> pipe(_popen(cmd, "r"), _pclose);
+	if (!pipe) throw std::runtime_error("popen() failed!");
+	while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr){
+		result += buffer.data();
+	}
+	return result;
+}
+
+void runMars() {
+	cout << MARS_COMMAND;
+	cout << endl << endl << "starting running mars" << endl;
+	cout<<exec(MARS_COMMAND.c_str());
+	cout << "mars finished" << endl;
+}
 

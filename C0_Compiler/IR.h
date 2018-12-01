@@ -19,9 +19,10 @@ const string IRCODE_FILE_NAME = "IR.txt";
 class IR{
 private:
 	vector<QuadCode> IRCode;
+	
 	// int tempCount = 0;
 public:
-
+	Mips mips;
 	//utils
 
 	void printToFile() {
@@ -36,12 +37,20 @@ public:
 
 	string getTemp() {
 		static int tempCount = 0;
-		return "TMP" + to_string((tempCount)++);
+		
+		string tmp =  "TMP" + to_string((tempCount)++);
+		this->tempDef(tmp);
+		return tmp;
 	}
 
 	string getLabel() {
 		static int labelCount = 0;
 		return "LABEL" + to_string((labelCount)++);
+	}
+
+	string getString() {
+		static int stringCount = 0;
+		return "STRING" + to_string((stringCount)++);
 	}
 
 	// translate
@@ -61,6 +70,13 @@ public:
 			to_string(arraySize)));
 	}
 
+	void tempDef(string name) {
+		IRCode.push_back(QuadCode(
+			TEMP_STRING,
+			name
+		));
+	}
+
 	void funcDef(TableItemDataType retType, string identifier, vector<Param> params) {
 		IRCode.push_back(QuadCode(
 			FUNC_STRING,
@@ -70,6 +86,8 @@ public:
 
 		funcParams(params);
 	}
+
+
 
 	void mainDef() {
 		IRCode.push_back(QuadCode(
@@ -112,12 +130,22 @@ public:
 	}
 
 	void calc(string op, string des, string left, string right = "*") {
-		IRCode.push_back(QuadCode(
-			op,
-			des,
-			left,
-			right
-		));
+		if (isNumber(left) && !isNumber(right)) {
+			IRCode.push_back(QuadCode(
+				op,
+				des,
+				right,
+				left
+			));
+		} else {
+			IRCode.push_back(QuadCode(
+				op,
+				des,
+				left,
+				right
+			));
+		}
+
 	}
 
 
@@ -192,6 +220,7 @@ public:
 		IRCode.push_back(QuadCode(
 			PRINTF_STRING,
 			STR_STRING,
+			getString(),
 			str
 		));
 	}
@@ -211,10 +240,7 @@ public:
 		));
 	}
 
-
-	~IR()
-	{
-		printToFile();
+	void toAsm() {
+		mips.translate(this->IRCode);
 	}
-
 };
