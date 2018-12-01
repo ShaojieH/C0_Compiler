@@ -1,14 +1,8 @@
 #pragma once
 #include "QuadCode.h"
 
-const int DATA_SIZE = 4;
-const string t0 = "$t0";
-const string t1 = "$t1";
-const string t2 = "$t2";
-const string sp = "$sp";
-const string ra = "$ra";
-const string a0 = "$a0";
-const string v0 = "$v0";
+
+
 
 bool isNumber(const string& s) {
 	auto it = s.begin();
@@ -26,6 +20,10 @@ bool isCompare(string op) {
 		|| op == BEQZ_STRING;
 }
 
+bool isReg(string str) {
+	return str.find("$") == 0;
+}
+
 string moveLabelToReg(string regName, string label) {
 	return "lw " + regName + ", " + label + "\n";
 }
@@ -33,6 +31,9 @@ string moveRegToLabel(string label, string regName) {
 	return "sw " + regName + ", " + label + "\n";
 }
 
+string moveRegToReg(string dst, string src) {
+	return "move " + dst + ", " + src + "\n";
+}
 
 string moveImmediateToReg(string regName, string val) {
 	return "li " + regName + ", " + val + "\n";
@@ -48,8 +49,9 @@ string moveLabelToLabel(string dst, string src) {
 		+ moveRegToLabel(dst, t0);
 }
 
-string moveLabelOrImmeToReg(string regName, string val) {
-	return isNumber(val) ? moveImmediateToReg(regName, val) : moveLabelToReg(regName, val);
+string moveLabelOrImmeOrRegToReg(string regName, string val) {
+	return isNumber(val) ? moveImmediateToReg(regName, val) :
+		(isReg(val) ? moveRegToReg(regName, val): moveLabelToReg(regName, val));
 }
 
 string moveLabelOrImmeToLabel(string label, string val) {
@@ -147,7 +149,7 @@ string math(QuadCode code) {
 		string left = code.third;
 		transform(op.begin(), op.end(), op.begin(), ::tolower);
 		return  moveLabelToReg(t1, left)
-			+ moveLabelOrImmeToReg(t2, code.fourth)
+			+ moveLabelOrImmeOrRegToReg(t2, code.fourth)
 			+ calculate(op, t0, t1, t2)
 			+ moveRegToLabel(des, t0);
 	}
@@ -191,15 +193,23 @@ string compare(QuadCode code) {
 	string cmp = code.first;
 	transform(cmp.begin(), cmp.end(), cmp.begin(), ::tolower);
 	if (code.first == BEQZ_STRING) {
-		return moveLabelOrImmeToReg(t0, code.second)
+		return moveLabelOrImmeOrRegToReg(t0, code.second)
 			+ binary(cmp, t0, code.third);
 	} else {
-		return moveLabelOrImmeToReg(t0, code.second)
-			+ moveLabelOrImmeToReg(t1, code.third)
+		return moveLabelOrImmeOrRegToReg(t0, code.second)
+			+ moveLabelOrImmeOrRegToReg(t1, code.third)
 			+ calculate(cmp, t0, t1, code.fourth);
 	}
 }
 
 string branch(string label) {
 	return "\nb " + label + "\n";
+}
+
+string jal(string func) {
+	return "\njal " + func + "\n";
+}
+
+string jr(string reg) {
+	return "jr " + reg + "\n";
 }

@@ -61,13 +61,29 @@ public:
 			this->data.push_back(spaceAlloc(code.second, DATA_SIZE));
 		}
 
-		else if (code.first == FUNC_STRING) {
+		else if (code.first == FUNC_STRING) {	// TODO: test this
 			if (code.second == DEF_STRING) {
 				this->text.push_back(label(code.fourth));
 			} else if(code.second == PARAM_STRING){
-
+				this->data.push_back(spaceAlloc(code.fourth, DATA_SIZE));
 			}
 		} 
+
+		else if (code.first == CALL_STRING) {
+			if (code.second == FUNC_STRING) {
+				this->text.push_back(jal(code.third));
+			} else if (code.second == PARAM_STRING) {
+				// TODO: fix this
+			}
+		}
+
+		else if (code.first == RETURN_STRING) {
+			if (code.second != "*") {
+				this->text.push_back(moveLabelOrImmeOrRegToReg(v0, code.second));
+			}
+			this->text.push_back(jr(ra));
+		}
+
 		else if (code.first == ADD_STRING 
 				|| code.first == SUB_STRING
 				|| code.first == MUL_STRING
@@ -107,6 +123,7 @@ public:
 			}
 			this->text.push_back(printNewLine());
 		}
+
 
 	}
 

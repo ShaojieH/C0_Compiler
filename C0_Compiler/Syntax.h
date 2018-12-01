@@ -185,6 +185,9 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 	}
 	
 	getCompoundStm();
+
+	ir.ret();
+
 	getRBracket();
 
 	symbolTable->removeTable();
@@ -320,7 +323,7 @@ string getFactor() {
 		} else if (isLParen()) {	// call function with return value
 			// todo: check if has return 
 			getFuncCall(id);
-			return "RET";
+			return v0;
 		} else {	// just id
 			return id;
 		}

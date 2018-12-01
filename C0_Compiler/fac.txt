@@ -1,0 +1,7 @@
+int fac(int i){
+	return (fac(i-1));
+}
+
+void main(){
+	fac(3);
+}

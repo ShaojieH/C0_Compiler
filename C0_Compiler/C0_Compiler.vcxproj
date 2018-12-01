@@ -139,6 +139,7 @@
     <Text Include="assign.txt" />
     <Text Include="calc.txt" />
     <Text Include="error_test.txt" />
+    <Text Include="fac.txt" />
     <Text Include="for.txt" />
     <Text Include="if.txt" />
     <Text Include="IR.txt" />

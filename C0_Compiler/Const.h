@@ -101,4 +101,11 @@ const vector<string> COMPARE_OR_EQUAL = {
 };
 
 
-
+const int DATA_SIZE = 4;
+const string t0 = "$t0";
+const string t1 = "$t1";
+const string t2 = "$t2";
+const string sp = "$sp";
+const string ra = "$ra";
+const string a0 = "$a0";
+const string v0 = "$v0";

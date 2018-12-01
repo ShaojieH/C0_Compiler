@@ -156,6 +156,7 @@ public:
 		}
 		IRCode.push_back(QuadCode(
 			CALL_STRING,
+			FUNC_STRING,
 			funcName
 		));
 	}
