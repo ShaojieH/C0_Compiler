@@ -5,7 +5,7 @@
 
 using namespace std;
 fstream inputFile;
-string FILE_NAME = "..\\..\\C0_Compiler\\C0_Compiler\\if.txt";
+string FILE_NAME = "..\\..\\C0_Compiler\\C0_Compiler\\16231232_test.txt";
 
 const string MARS_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mars.jar";
 const string ASM_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mips.asm";

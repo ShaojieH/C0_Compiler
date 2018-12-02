@@ -122,6 +122,12 @@
     <Text Include="fib.txt">
       <Filter>test</Filter>
     </Text>
+    <Text Include="16231232_test.txt">
+      <Filter>test</Filter>
+    </Text>
+    <Text Include="test4.txt">
+      <Filter>test</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mips.asm">
