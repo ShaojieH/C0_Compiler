@@ -35,14 +35,6 @@ public:
 		irFile.close();
 	}
 
-	string getTemp() {
-		static int tempCount = 0;
-		
-		string tmp =  "TMP" + to_string((tempCount)++);
-		this->tempDef(tmp);
-		return tmp;
-	}
-
 	string getLabel() {
 		static int labelCount = 0;
 		return "LABEL" + to_string((labelCount)++);
@@ -95,7 +87,7 @@ public:
 			MAIN_STRING));
 	}
 
-	void funcParam(Param param) {
+	void funcParam(Param param) {	// pop param
 			IRCode.push_back(QuadCode(
 				FUNC_STRING,
 				PARAM_STRING,
@@ -147,18 +139,37 @@ public:
 
 
 	void callFunc(string funcName, vector<string> valParams) {
-		for (string valParam : valParams) {
+
+		IRCode.push_back(QuadCode(	// push ra
+			PUSH_STRING,
+			ra
+		));
+
+
+		for (string valParam : valParams) {	// push param
 			IRCode.push_back(QuadCode(
-				CALL_STRING,
-				PARAM_STRING,
+				PUSH_STRING,
 				valParam
 			));
 		}
-		IRCode.push_back(QuadCode(
+
+		IRCode.push_back(QuadCode(	// call
 			CALL_STRING,
 			FUNC_STRING,
 			funcName
 		));
+		IRCode.push_back(QuadCode(	// pop ra
+			POP_STRING,
+			ra
+		));
+		/*
+		for (auto it = valParams.rbegin(); it != valParams.rend(); it++) {	// pop param
+			IRCode.push_back(QuadCode(
+				POP_STRING,
+				*it
+			));
+		}
+		*/
 	}
 
 	void assign(string left, string right) {
@@ -180,6 +191,27 @@ public:
 			RETURN_STRING
 		));
 	}
+
+	void pushLocals(vector<BaseItem*> items) {
+		for (auto it : items) {
+			IRCode.push_back(QuadCode(
+				PUSH_STRING,
+				it->irName,
+				"*"
+			));
+		}
+	}
+
+	void popLocals(vector<BaseItem*> items) {
+		for (auto it = items.rbegin(); it != items.rend(); ++it) {
+			IRCode.push_back(QuadCode(
+				POP_STRING,
+				(*it)->irName,
+				"*"
+			));
+		}
+	}
+
 
 	void label(string label) {
 		IRCode.push_back(QuadCode(

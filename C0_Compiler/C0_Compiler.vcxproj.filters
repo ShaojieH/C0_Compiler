@@ -101,9 +101,6 @@
     <Text Include="dowhile.txt">
       <Filter>test</Filter>
     </Text>
-    <Text Include="Mips.asm">
-      <Filter>Mips</Filter>
-    </Text>
     <Text Include="calc.txt">
       <Filter>test</Filter>
     </Text>
@@ -119,5 +116,16 @@
     <Text Include="fac.txt">
       <Filter>test</Filter>
     </Text>
+    <Text Include="func.txt">
+      <Filter>test</Filter>
+    </Text>
+    <Text Include="fib.txt">
+      <Filter>test</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Mips.asm">
+      <Filter>Mips</Filter>
+    </None>
   </ItemGroup>
 </Project>

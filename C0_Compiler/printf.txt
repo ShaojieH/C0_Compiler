@@ -2,6 +2,7 @@ const int a = 5;
 const char c = 'c';
 
 void main(){
+	printf("d");
 	printf("fuck");
 	printf('c');
 	printf("fucking shit", 100 + 50 + 20 + 30);

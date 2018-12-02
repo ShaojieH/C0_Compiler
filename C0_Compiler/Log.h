@@ -16,5 +16,5 @@ void error(string info = "") {
 }
 
 void table(string info = "") {
-	// cout << "Table: " << info << endl;
+	 // cout << "Table: " << info << endl;
 }

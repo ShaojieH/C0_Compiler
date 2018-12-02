@@ -193,13 +193,8 @@ void test_recursion(){
 }
 
 void main(){
-	test_symbol_char();;;;
+	test_symbol_char();
 	test_scanf_printf();
-	;
-	;
-	;
-	;
-	;
 	test_if_relational_operator();
 	test_do_while();
 	test_for();
@@ -207,11 +202,5 @@ void main(){
 	test_expression_with_colon();
 	test_array();
 	test_recursion();
-	;;;;;;
-	;
-	;
-	;
-	return;;;;;
-
-
+	return;
 }

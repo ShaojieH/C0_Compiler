@@ -1,7 +1,7 @@
 //#include "Lex.h"
  #include "Syntax.h"
 int main() {
-
+	
 	init();
 	getNextChar();
 	getNextToken();
@@ -17,7 +17,14 @@ int main() {
 
 	ir.printToFile();
 	ir.toAsm();
+
+	
+	begin = clock();
 	runMars();
+	end = clock();
+	elapsed_secs = ((double)end - (double)begin) / CLOCKS_PER_SEC;
+
+	cout << endl << endl << "Mars running done, time: " << elapsed_secs << "s" << endl;
 
 
 	cout << "Print any key to exit" << endl;

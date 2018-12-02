@@ -66,23 +66,32 @@ public:
 				this->text.push_back(label(code.fourth));
 			} else if(code.second == PARAM_STRING){
 				this->data.push_back(spaceAlloc(code.fourth, DATA_SIZE));
+				this->text.push_back(pop(code.fourth));
 			}
 		} 
 
 		else if (code.first == CALL_STRING) {
 			if (code.second == FUNC_STRING) {
 				this->text.push_back(jal(code.third));
-			} else if (code.second == PARAM_STRING) {
-				// TODO: fix this
 			}
+		}
+
+		else if (code.first == PUSH_STRING) {
+			this->text.push_back(push(code.second));
+		}
+
+		else if (code.first == POP_STRING) {
+			this->text.push_back(pop(code.second));
 		}
 
 		else if (code.first == RETURN_STRING) {
 			if (code.second != "*") {
-				this->text.push_back(moveLabelOrImmeOrRegToReg(v0, code.second));
+				this->text.push_back(moveToReg(v0, code.second));
 			}
 			this->text.push_back(jr(ra));
 		}
+
+
 
 		else if (code.first == ADD_STRING 
 				|| code.first == SUB_STRING
@@ -122,6 +131,8 @@ public:
 				this->text.push_back(printInt(code.third));
 			}
 			this->text.push_back(printNewLine());
+		} else if (code.first == SCANF_STRING) {
+			this->text.push_back(scanIntAndChar(code.second));
 		}
 
 
@@ -135,6 +146,10 @@ public:
 		}
 
 		this->strings.push_back(stringAlloc(ENTER_STRING, "\\n"));
+		this->strings.push_back(stringAlloc(SPACE_STRING, " "));
+
+		this->text.push_back(label(END_STRING));
+		this->consts.push_back(moveAddrToReg(ra, END_STRING));
 		printAsm();
 	}
 };

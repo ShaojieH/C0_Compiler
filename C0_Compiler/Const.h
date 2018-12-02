@@ -45,6 +45,9 @@ const string ASS_STRING = "ASS";
 const string RETURN_STRING = "RETURN";
 const string LABEL_STRING = "LABEL";
 
+const string PUSH_STRING = "PUSH";
+const string POP_STRING = "POP";
+
 const string BGE_STRING = "BGE";	// >=
 const string BGT_STRING = "BGT";	// >
 const string BLE_STRING = "BLE";	// <=
@@ -60,7 +63,10 @@ const string SCANF_STRING = "SCANF";
 
 const string SYSCALL_STRING = "syscall";
 const string ENTER_STRING = "ENTER";
+const string SPACE_STRING = "SPACE";
 const string TEMP_STRING = "TEMP";
+
+const string END_STRING = "END";
 
 typedef enum  TokenType{
 	ID, NUMBER, 
@@ -74,7 +80,7 @@ typedef enum  TokenType{
 }TokenType;
 
 typedef enum  TableItemType {
-	T_CONST, T_VAR, T_FUNC
+	T_CONST, T_VAR, T_FUNC, T_TEMP
 }TableItemType;
 
 typedef enum  TableItemDataType {

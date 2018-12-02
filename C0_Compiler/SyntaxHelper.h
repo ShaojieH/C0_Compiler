@@ -478,3 +478,10 @@ void getRSBracket() {
 	}
 	error(__func__);
 }
+string getTemp() {
+	TempItem* item = new TempItem();
+	string tmpName = item->irName;
+	symbolTable->insertSymbol(tmpName, item);
+	ir.tempDef(tmpName);
+	return tmpName;
+}

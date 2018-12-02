@@ -76,12 +76,41 @@ public:
 int FuncItem::funcItemCount = 0;
 
 
+class TempItem : public BaseItem {
+public:
+
+	static int tempItemCount;
+
+	TempItem() {
+		this->type = T_TEMP;
+		this->irName = TEMP_STRING + to_string((tempItemCount)++);
+	}
+};
+
+int TempItem::tempItemCount = 0;
+
 class Table {
 private:
 	unordered_map<string, ConstItem*> constItems;
 	unordered_map<string, VarItem*> varItems;
 	unordered_map<string, FuncItem*> funcItems;
+	unordered_map<string, TempItem*> tempItems;
 public:
+
+	vector<BaseItem*>	getAllItems() {
+		vector<BaseItem*> items;
+		for (auto it : constItems) {
+			items.push_back(it.second);
+		}
+		for (auto it : varItems) {
+			items.push_back(it.second);
+		}
+		for (auto it : tempItems) {
+			items.push_back(it.second);
+		}
+		return items;
+	}
+
 	BaseItem* find(string name) {
 		auto resultConst = constItems.find(name);
 		if (resultConst != constItems.end()) {
@@ -123,6 +152,13 @@ public:
 
 				break;
 			}
+			case T_TEMP: {
+				pair<string, TempItem*> temp(name, (TempItem*)item);
+				tempItems.insert(temp);
+				return temp.second;
+				break;
+			}
+
 			default: {
 				return nullptr;
 				break;
@@ -147,8 +183,13 @@ public:
 		table("Removing table");
 		tables.pop_back();
 	}
+
+	Table* top() {
+		return tables.back();
+	}
+
 	BaseItem* findGlobalSymbol(string name) {
-		for (auto i = tables.rbegin(); i != tables.rend(); i++) {
+		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
 			BaseItem* result = (*i)->find(name);
 			if (result) {
 				return result;

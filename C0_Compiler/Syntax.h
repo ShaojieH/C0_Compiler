@@ -267,7 +267,10 @@ string getExp() {
 	string result = getTerm();
 
 	if (sign == -1) {
-		string tmp = ir.getTemp();
+
+		string tmp = getTemp();
+
+
 		ir.calc(NEG_STRING, tmp, result);
 		result = tmp;
 	}
@@ -277,7 +280,9 @@ string getExp() {
 	string left = result;
 
 	while (isPlus()) {
-		result = ir.getTemp();
+
+
+		result = getTemp();
 		op = getPlusString();
 		right = getTerm();
 		ir.calc(op, result, left, right);
@@ -293,7 +298,7 @@ string getTerm() {
 	string left = result;
 
 	while (isMul()) {
-		result = ir.getTemp();
+		result = getTemp();
 		op = getMulString();
 		right = getFactor();
 		ir.calc(op, result, left, right);
@@ -317,13 +322,16 @@ string getFactor() {
 			getLSBracket();
 			string index = getExp();
 			getRSBracket();
-			string result = ir.getTemp();
+			string result = getTemp();
 			ir.arrGet(id, index, result);
 			return result;
 		} else if (isLParen()) {	// call function with return value
 			// todo: check if has return 
 			getFuncCall(id);
-			return v0;
+			
+			string tmpName = getTemp();
+			ir.assign(tmpName, v0);
+			return tmpName;
 		} else {	// just id
 			return id;
 		}
@@ -480,7 +488,11 @@ void getFuncCall(string identifier) {	// TODO: check if param match
 	getLParen();
 	vector<string> valParams = getValParamList();
 	getRParen();
+	vector<BaseItem*> items = symbolTable->top()->getAllItems();
+
+	ir.pushLocals(items);
 	ir.callFunc(identifier, valParams);
+	ir.popLocals(items);
 }
 
 vector<string> getValParamList() {

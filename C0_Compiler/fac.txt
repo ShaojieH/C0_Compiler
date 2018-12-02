@@ -1,7 +1,12 @@
+
 int fac(int i){
-	return (fac(i-1));
+	if(i <= 1)	return (1);
+	else return (i*fac(i-1));
 }
 
+
 void main(){
-	fac(3);
+	printf("start");
+	printf(fac(3));
+	printf(fac(5));
 }
