@@ -131,6 +131,9 @@
     <Text Include="expected.txt">
       <Filter>Mips</Filter>
     </Text>
+    <Text Include="Real_IR.txt">
+      <Filter>IR</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mips.asm">

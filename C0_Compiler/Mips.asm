@@ -313,7 +313,19 @@ sw $t0, TEMP0
 lw $t0, VAR12
 sw $t0, 0($sp)
 add $sp, $sp, 4
-lw $t0, VAR13
+lw $t0, VAR13+0
+sw $t0, 0($sp)
+add $sp, $sp, 4
+lw $t0, VAR13+4
+sw $t0, 0($sp)
+add $sp, $sp, 4
+lw $t0, VAR13+8
+sw $t0, 0($sp)
+add $sp, $sp, 4
+lw $t0, VAR13+12
+sw $t0, 0($sp)
+add $sp, $sp, 4
+lw $t0, VAR13+16
 sw $t0, 0($sp)
 add $sp, $sp, 4
 lw $t0, TEMP0
@@ -333,7 +345,19 @@ lw $t0, 0($sp)
 sw $t0, TEMP0
 sub $sp, $sp, 4
 lw $t0, 0($sp)
-sw $t0, VAR13
+sw $t0, VAR13+16
+sub $sp, $sp, 4
+lw $t0, 0($sp)
+sw $t0, VAR13+12
+sub $sp, $sp, 4
+lw $t0, 0($sp)
+sw $t0, VAR13+8
+sub $sp, $sp, 4
+lw $t0, 0($sp)
+sw $t0, VAR13+4
+sub $sp, $sp, 4
+lw $t0, 0($sp)
+sw $t0, VAR13+0
 sub $sp, $sp, 4
 lw $t0, 0($sp)
 sw $t0, VAR12
@@ -345,7 +369,19 @@ sw $t0, TEMP3
 lw $t0, VAR12
 sw $t0, 0($sp)
 add $sp, $sp, 4
-lw $t0, VAR13
+lw $t0, VAR13+0
+sw $t0, 0($sp)
+add $sp, $sp, 4
+lw $t0, VAR13+4
+sw $t0, 0($sp)
+add $sp, $sp, 4
+lw $t0, VAR13+8
+sw $t0, 0($sp)
+add $sp, $sp, 4
+lw $t0, VAR13+12
+sw $t0, 0($sp)
+add $sp, $sp, 4
+lw $t0, VAR13+16
 sw $t0, 0($sp)
 add $sp, $sp, 4
 lw $t0, TEMP0
@@ -383,7 +419,19 @@ lw $t0, 0($sp)
 sw $t0, TEMP0
 sub $sp, $sp, 4
 lw $t0, 0($sp)
-sw $t0, VAR13
+sw $t0, VAR13+16
+sub $sp, $sp, 4
+lw $t0, 0($sp)
+sw $t0, VAR13+12
+sub $sp, $sp, 4
+lw $t0, 0($sp)
+sw $t0, VAR13+8
+sub $sp, $sp, 4
+lw $t0, 0($sp)
+sw $t0, VAR13+4
+sub $sp, $sp, 4
+lw $t0, 0($sp)
+sw $t0, VAR13+0
 sub $sp, $sp, 4
 lw $t0, 0($sp)
 sw $t0, VAR12

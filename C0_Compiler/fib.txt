@@ -1,4 +1,6 @@
 int Fibonacci(int n) {
+	int extra1[3];
+	char extra2[5];
     if (n <= 1) {
         return(1);
     }

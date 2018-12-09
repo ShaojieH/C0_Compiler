@@ -3,7 +3,7 @@
 #include "IRHelper.h"
 
 const string IRCODE_FILE_NAME = "IR.txt";
-
+const string REAL_IRCODE_FILE_NAME = "Real_IR.txt";
 
 // quad code
 
@@ -36,12 +36,16 @@ public:
 
 	void printToFile() {
 		ofstream irFile;
+		ofstream realIrFile;
+		realIrFile.open(REAL_IRCODE_FILE_NAME);
 		irFile.open(IRCODE_FILE_NAME);
 
 		for (QuadCode code : IRCode) {
 			irFile << code.toString() << endl;
+			realIrFile << code.toRealString() << endl;
 		}
 		irFile.close();
+		realIrFile.close();
 	}
 
 	string getLabel() {
@@ -202,21 +206,41 @@ public:
 
 	void pushLocals(vector<BaseItem*> items) {
 		for (auto it : items) {
-			IRCode.push_back(QuadCode(
-				PUSH_STRING,
-				it->irName,
-				"*"
-			));
+			if (it->type == T_VAR && ((VarItem*)it)->isArray == true) {
+				IRCode.push_back(QuadCode(
+					PUSH_STRING,
+					it->irName,
+					to_string(((VarItem*)it)->arraySize)
+				));
+			} else {
+				IRCode.push_back(QuadCode(
+					PUSH_STRING,
+					it->irName,
+					"*"
+				));
+			}
+			
 		}
 	}
 
 	void popLocals(vector<BaseItem*> items) {
 		for (auto it = items.rbegin(); it != items.rend(); ++it) {
-			IRCode.push_back(QuadCode(
-				POP_STRING,
-				(*it)->irName,
-				"*"
-			));
+			if ((*it)->type == T_VAR && ((VarItem*)(*it))->isArray == true) {
+				IRCode.push_back(QuadCode(
+					POP_STRING,
+					(*it)->irName,
+					to_string(((VarItem*)(*it))->arraySize)
+				));
+			} else {
+				IRCode.push_back(QuadCode(
+					POP_STRING,
+					(*it)->irName,
+					"*"
+				));
+			}
+
+
+
 		}
 	}
 

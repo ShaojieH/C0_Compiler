@@ -76,12 +76,27 @@ public:
 			}
 		}
 
-		else if (code.first == PUSH_STRING) {
-			this->text.push_back(push(code.second));
+		else if (code.first == PUSH_STRING) {	// and array
+			if (code.third != "*") {
+				int arrSize = stoi(code.third);
+				for (int i = 0; i < arrSize; i++) {
+					this->text.push_back(push(code.second + "+" + to_string(i * 4)));
+				}
+			} else {
+				this->text.push_back(push(code.second));
+			}
+			
 		}
 
 		else if (code.first == POP_STRING) {
-			this->text.push_back(pop(code.second));
+			if (code.third != "*") {
+				int arrSize = stoi(code.third);
+				for (int i = arrSize-1; i >= 0; i--) {
+					this->text.push_back(pop(code.second + "+" + to_string(i * 4)));
+				}
+			} else {
+				this->text.push_back(pop(code.second));
+			}
 		}
 
 		else if (code.first == RETURN_STRING) {
