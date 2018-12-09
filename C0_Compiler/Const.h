@@ -13,6 +13,8 @@
 #include <stdexcept>
 #include <cstdio>
 #include <cctype>
+#include <regex>
+
 using namespace std;
 
 //typedef enum  FuncRetType {
@@ -44,6 +46,8 @@ const string CALL_STRING = "CALL";
 const string ASS_STRING = "ASS";
 const string RETURN_STRING = "RETURN";
 const string LABEL_STRING = "LABEL";
+const string ARR_STRING = "ARR";
+
 
 const string PUSH_STRING = "PUSH";
 const string POP_STRING = "POP";
@@ -84,7 +88,7 @@ typedef enum  TableItemType {
 }TableItemType;
 
 typedef enum  TableItemDataType {
-	T_STRING, T_INT, T_CHAR, T_VOID
+	T_STRING, T_INT, T_CHAR, T_VOID, T_INVALID
 }TableItemDataType;
 
 const vector<char> SYMBOLS = {

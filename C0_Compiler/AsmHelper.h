@@ -99,14 +99,31 @@ string printInt(string val) {
 		+ syscall();
 }
 
+string printChar(string val) {
+
+	return move(a0, val)
+		+ move(v0, to_string(11))
+		+ syscall();
+}
+
 string printNewLine() {
 	return printString(ENTER_STRING);
 }
 
-string scanIntAndChar(string dst) {
+string printSpace(){
+	return printString(SPACE_STRING);
+}
+
+string scanfInt(string dst) {
 	return move(v0, to_string(5))
 		+ syscall()
 		+	move(dst, v0);
+}
+
+string scanfChar(string dst) {
+	return move(v0, to_string(12))
+		+ syscall()
+		+ move(dst, v0);
 }
 
 string neg(QuadCode code) {

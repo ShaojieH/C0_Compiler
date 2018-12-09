@@ -137,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="16231232_test.txt" />
+    <Text Include="expected.txt" />
     <Text Include="test4.txt" />
     <Text Include="assign.txt" />
     <Text Include="calc.txt" />

@@ -3,12 +3,12 @@
 class BaseItem {
 public:
 	TableItemType type;
+	TableItemDataType dataType;
 	string irName;
 };
 
 class ConstItem : public BaseItem {
 public:
-	TableItemDataType dataType;
 	TokenValue value;
 	static int constItemCount;
 	ConstItem(TableItemDataType dataType, TokenValue value) {
@@ -23,7 +23,6 @@ int ConstItem::constItemCount = 0;
 
 class VarItem : public BaseItem {
 public:
-	TableItemDataType dataType;
 	bool isArray;
 	int arraySize;
 	static int varItemCount;
@@ -51,21 +50,19 @@ int VarItem::varItemCount = 0;
 
 class Param : public BaseItem {
 public:
-	TableItemDataType paramType;
 	string paramName;
 	Param(TableItemDataType paramType, string paramName) {
-		this->paramType = paramType;
+		this->dataType = paramType;
 		this->paramName = paramName;
 	}
 };
 
 class FuncItem : public BaseItem {
 public:
-	TableItemDataType returnType;
 	vector<Param> params;
 	static int funcItemCount;
 	FuncItem(TableItemDataType returnType, vector<Param> params) {
-		this->returnType = returnType;
+		this->dataType = returnType;
 		this->type = T_FUNC;
 		this->params = params;
 
@@ -80,8 +77,9 @@ class TempItem : public BaseItem {
 public:
 
 	static int tempItemCount;
-
+	
 	TempItem() {
+		this->dataType = T_INT;
 		this->type = T_TEMP;
 		this->irName = TEMP_STRING + to_string((tempItemCount)++);
 	}
@@ -123,6 +121,25 @@ public:
 		auto resultFunc = funcItems.find(name);
 		if (resultFunc != funcItems.end()) {
 			return resultFunc->second;
+		}
+		return nullptr;
+	}
+
+	BaseItem* findByIr(string name) {
+		for (auto item : constItems) {
+			if (item.second->irName == name) {
+				return item.second;
+			}
+		}
+		for (auto item : varItems) {
+			if (item.second->irName == name) {
+				return item.second;
+			}
+		}
+		for (auto item : funcItems) {
+			if (item.second->irName == name) {
+				return item.second;
+			}
 		}
 		return nullptr;
 	}
@@ -212,5 +229,15 @@ public:
 			table("inserting item, id is:" + name + ", type i :" + to_string(item->type));
 		}
 		return result;
+	}
+
+	TableItemDataType getTypeByIrName(string irName) {
+		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
+			BaseItem* result = (*i)->findByIr(irName);
+			if (result) {
+				return result->dataType;
+			}
+		}
+		return T_INVALID;
 	}
 };

@@ -32,6 +32,9 @@ void getRetStm();
 bool isInFuncDef = false;
 bool isMainPresent = true;
 
+bool isCharNum = false;
+
+
 void getProgram() {
 	symbolTable->addTable();
 	syntax(__func__);
@@ -177,7 +180,7 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 	symbolTable->addTable();
 
 	for (auto param : paramList) {
-		BaseItem* result = symbolTable->insertSymbol(param.paramName, new VarItem(param.paramType));
+		BaseItem* result = symbolTable->insertSymbol(param.paramName, new VarItem(param.dataType));
 		if (result) {
 			param.irName = result->irName;
 			ir.funcParam(param);
@@ -308,6 +311,7 @@ string getTerm() {
 }
 
 string getFactor() {
+	isCharNum = false;
 	syntax(__func__);
 	if (isIdentifier()) {
 
@@ -332,12 +336,13 @@ string getFactor() {
 			string tmpName = getTemp();
 			ir.assign(tmpName, v0);
 			return tmpName;
-		} else {	// just id
+		} else {	// just id, return irName
 			return id;
 		}
 	}else if (isNumber()) {
 		return to_string(getNumVal());
 	}else if (isCharVal()) {
+		isCharNum = true;
 		return to_string((int)getCharVal());
 	}else {
 		getLParen();
@@ -518,11 +523,13 @@ void getScanfStm() {
 	getScanf();
 	getLParen();
 	string id = getIdentifierFromTable();
-	ir.scanf(id);
+	TableItemDataType type = symbolTable->getTypeByIrName(id);
+	ir.scanf(id, type);
 	while (isComma()) {
 		getComma();
 		id = getIdentifierFromTable();
-		ir.scanf(id);
+		TableItemDataType type = symbolTable->getTypeByIrName(id);
+		ir.scanf(id, type);
 	}
 	getRParen();
 	
@@ -535,15 +542,27 @@ void getPrintfStm() {
 		string strVal = getStrVal();
 		ir.printStr(strVal);
 		if (isComma()) {
+			ir.printSpace();
 			getComma();
 			string exp = getExp();
-			ir.printExp(exp);
+			TableItemDataType type = symbolTable->getTypeByIrName(exp);
+			if (type == T_CHAR || isCharNum) {
+				ir.printChar(exp);
+			}
+			else ir.printExp(exp);
 		}
 	} else {
 		string exp = getExp();
-		ir.printExp(exp);
+		TableItemDataType type = symbolTable->getTypeByIrName(exp);
+		if (type == T_CHAR) {
+			ir.printChar(exp);
+		}
+		else ir.printExp(exp);
 	}
+	ir.printEnter();
 	getRParen();
+
+	isCharNum = false;
 }
 void getRetStm() {
 	syntax(__func__);

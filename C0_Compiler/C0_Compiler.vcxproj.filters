@@ -128,6 +128,9 @@
     <Text Include="test4.txt">
       <Filter>test</Filter>
     </Text>
+    <Text Include="expected.txt">
+      <Filter>Mips</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mips.asm">

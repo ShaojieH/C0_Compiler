@@ -124,15 +124,32 @@ public:
 		}
 
 		else if (code.first == PRINTF_STRING) {
-			if (code.second == STR_STRING) {
-				this->strings.push_back(stringAlloc(code.third, code.fourth));
-				this->text.push_back(printString(code.third));
-			} else if (code.second == EXP_STRING) {
+			if (code.second == STR_STRING) {// printf str
+				if (code.third == SPACE_STRING) {// printf str space
+					this->text.push_back(printSpace());
+				} else if (code.third == ENTER_STRING) {// printf str enter
+					this->text.push_back(printNewLine());
+				} else {
+					this->strings.push_back(stringAlloc(code.third, code.fourth));
+					this->text.push_back(printString(code.third));
+				}
+				
+			} else if (code.second == EXP_STRING) {	// printf exp
 				this->text.push_back(printInt(code.third));
+			} else if (code.second == CHAR_STRING) {// printf char
+				this->text.push_back(printChar(code.third));
 			}
-			this->text.push_back(printNewLine());
-		} else if (code.first == SCANF_STRING) {
-			this->text.push_back(scanIntAndChar(code.second));
+
+			// this->text.push_back(printNewLine());
+		} 
+		
+		else if (code.first == SCANF_STRING) {
+			if (code.second == INT_STRING) {
+				this->text.push_back(scanfInt(code.third));
+			} else if (code.second == CHAR_STRING) {
+				this->text.push_back(scanfChar(code.third));
+			}
+			
 		}
 
 

@@ -4,31 +4,50 @@ int symbol[7], array[7];
 int n;
 
 void testPrintf(){
+	int a;
+	char c;
+	a = 10;
+	c = 'c';
 	printf("test printf");
 	printf("This is a string");
 	printf(5);
 	printf("This is a number:", 5);
+	printf("This is another number:", a);
+	printf("line\n\n\n\n");
+	printf("This is a char:", 'f');
+	printf("This is another char:", c);
 }
 
 void testScanf(){
 	int a, b, c;
+	char d, e, f;
 	printf("test scanf");
 	scanf(a, b, c);
 	printf("Entered numbers are:");
 	printf(a);
 	printf(b);
 	printf(c);
+	scanf(d, e, f);
+	printf("Entered char are:");
+	printf(d);
+	printf(e);
+	printf(f);
 }
 
 int fib(int i){
+	int extra[5];
 	if(i <= 1)	return (1);
 	else return (fib(i-1) + fib(i-2));
 }
 
 void testRecursion(){
+	int fib5;
 	printf("test recursion:");
-	printf("fib(5)=");
-	printf(fib(5));
+	fib5 = fib(5);
+	if(fib(5) == 8){
+		printf("Recursion correct");
+	}
+	printf("fib(5)=", fib5);
 }
 
 void testCondition(){
@@ -101,6 +120,9 @@ void testArray(){
 	a = arr2[2];
 	arr[2] = a;
 	printf("arr[2]=", arr[2]);
+	if(arr[2] == 5){
+		printf("array correct");
+	}
 }
 
 int add(int a, int b){
@@ -140,6 +162,7 @@ void testPermutation(int index){
 		for(i = 0; i < n; i = i + 1){
 			printf(array[i]);
 		}
+		printf("");
 		return;
 	}
 	

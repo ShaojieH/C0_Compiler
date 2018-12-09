@@ -15,6 +15,15 @@ const string IRCODE_FILE_NAME = "IR.txt";
 
 // func call	CALL NAME
 
+void replaceStringInPlace(std::string& subject, const std::string& search,
+	const std::string& replace) {
+	size_t pos = 0;
+	while ((pos = subject.find(search, pos)) != std::string::npos) {
+		subject.replace(pos, search.length(), replace);
+		pos += replace.length();
+	}
+}
+
 
 class IR{
 private:
@@ -91,7 +100,7 @@ public:
 			IRCode.push_back(QuadCode(
 				FUNC_STRING,
 				PARAM_STRING,
-				toString(param.paramType),
+				toString(param.dataType),
 				param.irName));
 		
 	}
@@ -152,7 +161,6 @@ public:
 				valParam
 			));
 		}
-
 		IRCode.push_back(QuadCode(	// call
 			CALL_STRING,
 			FUNC_STRING,
@@ -247,11 +255,28 @@ public:
 
 
 	void printStr(string str) {
+		replaceStringInPlace(str, "\\", "\\\\");
 		IRCode.push_back(QuadCode(
 			PRINTF_STRING,
 			STR_STRING,
 			getString(),
 			str
+		));
+	}
+
+	void printEnter() {
+		IRCode.push_back(QuadCode(
+			PRINTF_STRING,
+			STR_STRING,
+			ENTER_STRING
+		));
+	}
+
+	void printSpace() {
+		IRCode.push_back(QuadCode(
+			PRINTF_STRING,
+			STR_STRING,
+			SPACE_STRING
 		));
 	}
 
@@ -263,11 +288,35 @@ public:
 		));
 	}
 
-	void scanf(string id) {
+	void printChar(string str) {
 		IRCode.push_back(QuadCode(
-			SCANF_STRING,
-			id
+			PRINTF_STRING,
+			CHAR_STRING,
+			str
 		));
+	}
+
+	void scanf(string id, TableItemDataType dataType) {
+		switch (dataType) {
+		case T_INT: {
+			IRCode.push_back(QuadCode(
+				SCANF_STRING,
+				INT_STRING,
+				id
+			));
+			break;
+		}
+		case T_CHAR: {
+			IRCode.push_back(QuadCode(
+				SCANF_STRING,
+				CHAR_STRING,
+				id
+			));
+			break;
+		}
+		default:{}
+		}
+
 	}
 
 	void toAsm() {

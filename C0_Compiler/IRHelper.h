@@ -3,10 +3,6 @@
 #include "Asm.h"
 
 
-
-
-
-
 string toString(TableItemDataType type) {
 	switch (type) {
 	case T_STRING:
