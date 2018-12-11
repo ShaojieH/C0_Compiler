@@ -1,7 +1,7 @@
 #pragma once
 #include "Const.h"
 void info(string info = "Default info") {
-	cout << "Info: " << info << endl;
+	// cout << "Info: " << info << endl;
 }
 
 void syntax(string info = "Default info") {
@@ -10,7 +10,8 @@ void syntax(string info = "Default info") {
 }
 
 void error(string info = "") {
-	cout << "Error: " <<info<< endl;
+	cout << "Error: " <<info << endl;
+	
 	getchar();
 	exit(0);
 }

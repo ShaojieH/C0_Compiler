@@ -6,7 +6,7 @@
 
 bool isNumber(const string& s) {
 	auto it = s.begin();
-	while (it != s.end() && isdigit(*it)) ++it;
+	while (it != s.end() && (isdigit(*it) || (*it) == '-')) ++it;
 	return !s.empty() && it == s.end();
 }
 

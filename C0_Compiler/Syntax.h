@@ -313,6 +313,9 @@ string getTerm() {
 string getFactor() {
 	isCharNum = false;
 	syntax(__func__);
+
+
+
 	if (isIdentifier()) {
 
 		Token* t1 = new Token(*currentToken); // id
@@ -339,7 +342,7 @@ string getFactor() {
 		} else {	// just id, return irName
 			return id;
 		}
-	}else if (isNumber()) {
+	}else if (isNumber() || isPlus()) {	// a = 1 + -1
 		return to_string(getNumVal());
 	}else if (isCharVal()) {
 		isCharNum = true;

@@ -21,7 +21,7 @@ IR ir = IR();
 int lineCount = 1;
 int charCount = 1;
 
-bool isFileNameInputFromConsole = false;
+bool isFileNameInputFromConsole = true;
 
 void init() {
 	if (isFileNameInputFromConsole) {
