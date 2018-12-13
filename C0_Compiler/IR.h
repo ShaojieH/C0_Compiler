@@ -158,13 +158,13 @@ public:
 			ra
 		));
 
-
-		for (string valParam : valParams) {	// push param
+		for (auto it = valParams.rbegin(); it != valParams.rend(); ++it) {// push param
 			IRCode.push_back(QuadCode(
 				PUSH_STRING,
-				valParam
+				(*it)
 			));
 		}
+
 		IRCode.push_back(QuadCode(	// call
 			CALL_STRING,
 			FUNC_STRING,
