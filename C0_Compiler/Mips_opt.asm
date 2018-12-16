@@ -296,7 +296,6 @@ FUNC2:
 sub $sp, $sp, 4
 lw $t0, 0($sp)
 sw $t0, VAR12
-lw $t0, VAR12
 li $t1, 1
 bgt $t0, $t1, LABEL0
 li $v0, 1
@@ -741,9 +740,7 @@ lw $t1, VAR16
 li $t2, 1
 sub $t0, $t1, $t2
 sw $t0, TEMP7
-lw $t0, TEMP7
 sw $t0, VAR16
-lw $t0, VAR16
 li $t1, 0
 blt $t0, $t1, LABEL20
 
@@ -763,15 +760,10 @@ li $v0, 4
 syscall
 li $t0, 5
 sw $t0, VAR17 + 0
-lw $t0, VAR17 + 0
 sw $t0, TEMP8
-lw $t0, TEMP8
 sw $t0, VAR18 + 8
-lw $t0, VAR18 + 8
 sw $t0, TEMP9
-lw $t0, TEMP9
 sw $t0, VAR19
-lw $t0, VAR19
 sw $t0, VAR17 + 8
 la $a0, STRING33
 li $v0, 4
@@ -789,7 +781,6 @@ li $v0, 4
 syscall
 lw $t0, VAR17 + 8
 sw $t0, TEMP11
-lw $t0, TEMP11
 li $t1, 5
 bne $t0, $t1, LABEL21
 la $a0, STRING34
@@ -817,7 +808,6 @@ add $t0, $t1, $t2
 sw $t0, TEMP12
 lw $v0, TEMP12
 jr $ra
-jr $ra
 
 FUNC9:
 
@@ -832,7 +822,6 @@ lw $t2, VAR23
 mul $t0, $t1, $t2
 sw $t0, TEMP13
 lw $v0, TEMP13
-jr $ra
 jr $ra
 
 FUNC10:
@@ -1018,7 +1007,6 @@ FUNC12:
 sub $sp, $sp, 4
 lw $t0, 0($sp)
 sw $t0, VAR24
-lw $t0, VAR24
 lw $t1, VAR3
 blt $t0, $t1, LABEL22
 li $t0, 0
@@ -1070,7 +1058,6 @@ lw $t1, VAR25
 sll $t1, $t1, 2
 lw $t0, VAR1($t1)
 sw $t0, TEMP33
-lw $t0, TEMP33
 li $t1, 0
 bne $t0, $t1, LABEL27
 lw $t1, VAR25
@@ -1162,49 +1149,41 @@ add $sp, $sp, 4
 jal FUNC0
 sub $sp, $sp, 4
 lw $ra, 0($sp)
-sw $ra, 0($sp)
 add $sp, $sp, 4
 
 jal FUNC1
 sub $sp, $sp, 4
 lw $ra, 0($sp)
-sw $ra, 0($sp)
 add $sp, $sp, 4
 
 jal FUNC4
 sub $sp, $sp, 4
 lw $ra, 0($sp)
-sw $ra, 0($sp)
 add $sp, $sp, 4
 
 jal FUNC5
 sub $sp, $sp, 4
 lw $ra, 0($sp)
-sw $ra, 0($sp)
 add $sp, $sp, 4
 
 jal FUNC6
 sub $sp, $sp, 4
 lw $ra, 0($sp)
-sw $ra, 0($sp)
 add $sp, $sp, 4
 
 jal FUNC7
 sub $sp, $sp, 4
 lw $ra, 0($sp)
-sw $ra, 0($sp)
 add $sp, $sp, 4
 
 jal FUNC10
 sub $sp, $sp, 4
 lw $ra, 0($sp)
-sw $ra, 0($sp)
 add $sp, $sp, 4
 
 jal FUNC3
 sub $sp, $sp, 4
 lw $ra, 0($sp)
-sw $ra, 0($sp)
 add $sp, $sp, 4
 
 jal FUNC11

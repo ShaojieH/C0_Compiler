@@ -6,4 +6,3 @@ int add2(){
 void main(){
 
 }
-

@@ -34,6 +34,7 @@ bool isMainPresent = true;
 
 bool isCharNum = false;
 bool hasReturn = false;
+string currentFuncIrName = "";
 TableItemDataType currentFuncRetType = T_INVALID;
 
 void getProgram() {
@@ -175,6 +176,7 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 	BaseItem* result = symbolTable->insertSymbol(identifier, new FuncItem(retType, paramList));
 	if (result) {
 		ir.funcDef(retType, result->irName);
+		currentFuncIrName = result->irName;
 	}
 
 	symbolTable->addTable();
@@ -201,6 +203,7 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 	}
 	isInFuncDef = false;
 	hasReturn = false;
+	currentFuncIrName = "";
 	if (isFuncRetType()) {
 		TableItemDataType retType = getFuncRetType();
 		string identifier = getIdentifierOrMain();
@@ -510,9 +513,13 @@ void getFuncCall(string identifier) {	// TODO: check if param match
 	getRParen();
 	vector<BaseItem*> items = symbolTable->top()->getAllItems();
 
-	ir.pushLocals(items);
+	if (identifier == currentFuncIrName) {
+		ir.pushLocals(items);
+	}
 	ir.callFunc(identifier, valParams);
-	ir.popLocals(items);
+	if (identifier == currentFuncIrName) {
+		ir.popLocals(items);
+	}
 }
 
 vector<string> getValParamList() {

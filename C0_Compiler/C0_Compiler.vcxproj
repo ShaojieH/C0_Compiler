@@ -124,6 +124,7 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="LexHelper.h" />
     <ClInclude Include="Asm.h" />
+    <ClInclude Include="Optimize.h" />
     <ClInclude Include="QuadCode.h" />
     <ClInclude Include="SyntaxHelper.h" />
     <ClInclude Include="Lex.h" />
@@ -166,6 +167,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Mips.asm" />
+    <None Include="Mips_opt.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

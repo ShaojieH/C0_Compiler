@@ -1,5 +1,5 @@
 //#include "Lex.h"
- #include "Syntax.h"
+ #include "Optimize.h"
 int main() {
 	
 	init();
@@ -18,6 +18,7 @@ int main() {
 	if (!hasError) {
 		ir.printToFile();
 		ir.toAsm();
+		Optimize* optimizer = new Optimize();
 		begin = clock();
 		runMars();
 		end = clock();
