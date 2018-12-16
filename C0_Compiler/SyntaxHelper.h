@@ -146,7 +146,9 @@ void getVoid() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getVoid();
 }
 
 void getLParen() {
@@ -154,7 +156,9 @@ void getLParen() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getLParen();
 }
 
 void getRParen() {
@@ -162,14 +166,18 @@ void getRParen() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getLParen();
 }
 void getLBracket() {
 	if (isLBracket()) {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getLBracket();
 }
 
 void getRBracket() {
@@ -177,7 +185,9 @@ void getRBracket() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getRBracket();
 }
 
 void getMain() {
@@ -185,7 +195,9 @@ void getMain() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getMain();
 }
 
 void getConst() {
@@ -193,7 +205,9 @@ void getConst() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getConst();
 }
 
 void getInt() {
@@ -201,7 +215,9 @@ void getInt() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getInt();
 }
 
 void getChar() {
@@ -209,7 +225,9 @@ void getChar() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getChar();
 }
 
 void getSemi() {
@@ -217,7 +235,9 @@ void getSemi() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getSemi();
 }
 
 void getComma() {
@@ -225,7 +245,9 @@ void getComma() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getComma();
 }
 
 string getIdentifier() {
@@ -234,10 +256,12 @@ string getIdentifier() {
 		getNextToken();
 		return id;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	return getIdentifier();
 }
 
-string getIdentifierFromTable () {
+string getIdentifierFromTable () {	// TODO: wtf??
 	if (isIdentifier()) {
 		string id = currentToken->tokenValue->idOrString;
 		getNextToken();
@@ -245,10 +269,13 @@ string getIdentifierFromTable () {
 		if (result) {
 			return result->irName;
 		} else {
-			error("Id not declared");
+			lexError("Id not declared");
+			return getIdentifierFromTable();
 		}
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	return getIdentifierFromTable();
 }
 
 string getIdentifierOrMain() {
@@ -261,7 +288,10 @@ string getIdentifierOrMain() {
 		getNextToken();
 		return "main";
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	return getIdentifierOrMain();
+	
 }
 
 
@@ -270,7 +300,9 @@ void getAssign() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getAssign();
 }
 
 
@@ -280,7 +312,9 @@ char getCharVal() {
 		getNextToken();
 		return c;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	return getCharVal();
 }
 
 TableItemDataType getType() {
@@ -289,7 +323,9 @@ TableItemDataType getType() {
 		getNextToken();
 		return type;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	return getType();
 }
 
 int getPlus() {
@@ -298,7 +334,9 @@ int getPlus() {
 		getNextToken();
 		return sign;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	return getPlus();
 }
 
 string getPlusString() {
@@ -307,7 +345,9 @@ string getPlusString() {
 		getNextToken();
 		return plusOrString;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	return getPlusString();
 }
 
 string getMulString() {
@@ -316,7 +356,9 @@ string getMulString() {
 		getNextToken();
 		return mulOrDiv;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	return getMulString();
 }
 
 int getUnsignedNumVal() {
@@ -325,7 +367,9 @@ int getUnsignedNumVal() {
 		getNextToken();
 		return val;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	return getUnsignedNumVal();
 }
 
 
@@ -342,7 +386,9 @@ void getIf() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	getIf();
 }
 
 void getElse() {
@@ -350,7 +396,9 @@ void getElse() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	getElse();
 }
 
 string getCmp() {
@@ -383,13 +431,15 @@ string getCmp() {
 			break;
 		}
 		default:
-			error("Invalid cmp");
+			lexError("Invalid cmp");
 			break;
 		}
 		getNextToken();
 		return cmp;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	return getCmp();
 }
 
 void getDo() {
@@ -397,7 +447,9 @@ void getDo() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	getDo();
 }
 
 void getWhile() {
@@ -405,7 +457,9 @@ void getWhile() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	getWhile();
 }
 
 void getFor() {
@@ -413,7 +467,9 @@ void getFor() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	getFor();
 }
 
 void getScanf() {
@@ -421,7 +477,9 @@ void getScanf() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	getScanf();
 }
 
 void getPrintf() {
@@ -429,7 +487,9 @@ void getPrintf() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	getPrintf();
 }
 
 void getRet() {
@@ -437,7 +497,10 @@ void getRet() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	getRet();
+
 }
 
 string getStrVal() {
@@ -446,7 +509,9 @@ string getStrVal() {
 		getNextToken();
 		return strVal;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	return getStrVal();
 }
 
 TableItemDataType getFuncRetType() {
@@ -457,10 +522,12 @@ TableItemDataType getFuncRetType() {
 		case 1: return  T_INT;
 		case 2: return  T_CHAR;
 		case 3:	return  T_VOID;
-		default: error(__func__);
+		default: lexError(__func__, lineCount);
 		}
 	}
-	error(__func__);
+	lexError(__func__, lineCount);
+	getNextToken();
+	return getFuncRetType();
 }
 
 void getLSBracket() {
@@ -468,7 +535,9 @@ void getLSBracket() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getLSBracket();
 }
 
 void getRSBracket() {
@@ -476,10 +545,12 @@ void getRSBracket() {
 		getNextToken();
 		return;
 	}
-	error(__func__);
+	getNextToken();
+	lexError(__func__, lineCount);
+	getRSBracket();
 }
-string getTemp() {
-	TempItem* item = new TempItem();
+string getTemp(TableItemDataType dataType = T_INT) {
+	TempItem* item = new TempItem(dataType);
 	string tmpName = item->irName;
 	symbolTable->insertSymbol(tmpName, item);
 	ir.tempDef(tmpName);

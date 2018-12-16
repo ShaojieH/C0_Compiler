@@ -5,6 +5,8 @@
 const string IRCODE_FILE_NAME = "IR.txt";
 const string REAL_IRCODE_FILE_NAME = "Real_IR.txt";
 
+// bool hasError = false;
+
 // quad code
 
 // const dec	CONST TYPE NAME VALUE
@@ -345,5 +347,6 @@ public:
 
 	void toAsm() {
 		mips.translate(this->IRCode);
+		
 	}
 };

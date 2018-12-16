@@ -3,15 +3,18 @@
 #include "IR.h"
 
 
+
+
+
 using namespace std;
 fstream inputFile;
-string FILE_NAME = "..\\..\\C0_Compiler\\C0_Compiler\\16231232_test.txt";
+string FILE_NAME = "..\\..\\C0_Compiler\\C0_Compiler\\printChar.txt";
 
 const string MARS_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mars.jar";
 const string ASM_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mips.asm";
-const string MARS_COMMAND = "java -jar " + MARS_PATH + " 100000 " + ASM_PATH;
+const string MARS_COMMAND = "java -jar " + MARS_PATH + "  " + ASM_PATH;
 
-char currentChar;
+
 Token* currentToken;
 string currentString;
 SymbolTable* symbolTable;
@@ -21,7 +24,7 @@ IR ir = IR();
 int lineCount = 1;
 int charCount = 1;
 
-bool isFileNameInputFromConsole = false;
+bool isFileNameInputFromConsole = true;
 
 void init() {
 	if (isFileNameInputFromConsole) {

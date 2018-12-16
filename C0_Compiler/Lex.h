@@ -30,8 +30,9 @@ void getNextToken() {
 		getString();
 	} else if (isQuote()) {
 		getCh();
-	} else {
-		// info("Invalid token");
+	}
+	else {
+		info("Invalid token");
 		currentToken->tokenType = INVALID;
 		getNextChar();
 	}

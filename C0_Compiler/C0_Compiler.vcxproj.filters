@@ -22,6 +22,9 @@
     <Filter Include="Mips">
       <UniqueIdentifier>{e702331e-2896-4056-8385-d0a4b10ec5c7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test_error">
+      <UniqueIdentifier>{218e2379-f010-4796-a017-370448a378dd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lex.h">
@@ -135,6 +138,12 @@
       <Filter>IR</Filter>
     </Text>
     <Text Include="neg.txt">
+      <Filter>test</Filter>
+    </Text>
+    <Text Include="lex.txt">
+      <Filter>test_error</Filter>
+    </Text>
+    <Text Include="printChar.txt">
       <Filter>test</Filter>
     </Text>
   </ItemGroup>

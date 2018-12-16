@@ -44,7 +44,7 @@ void getProgram() {
 	getVarDec();
 	
 	if (!isMainPresent) {
-		error("No main found");
+		syntaxError("No main found");
 	}
 	symbolTable->removeTable();
 }
@@ -108,7 +108,7 @@ void getVarDefHelper(TableItemDataType type, string id) {
 		getLSBracket();
 		arraySize = getUnsignedNumVal();
 		if (arraySize <= 0) {
-			error("Array size illegal");
+			syntaxError("Array size illegal");
 		}
 		isArray = true;
 		getRSBracket();
@@ -129,7 +129,7 @@ void getVarDef() {
 		getFuncDef(type, id);
 		return;
 	} else if(type == T_VOID){
-		error("void var declaration");
+		syntaxError("void var declaration");
 	}
 	syntax(__func__);
 
@@ -151,9 +151,8 @@ void getVarDef() {
 
 
 void getFuncDef(TableItemDataType retType, string identifier) {
-
 	if (isInFuncDef) {
-		error("Function define within function");
+		syntaxError("Function define within function");
 	}
 
 	isInFuncDef = true;
@@ -255,7 +254,7 @@ void getMainFunc() {
 	symbolTable->removeTable();
 
 	if (currentChar != EOF) {
-		error("File not finished after main");
+		syntaxError("File not finished after main");
 	}
 }
 
@@ -272,7 +271,6 @@ string getExp() {
 	if (sign == -1) {
 
 		string tmp = getTemp();
-
 
 		ir.calc(NEG_STRING, tmp, result);
 		result = tmp;
@@ -314,8 +312,6 @@ string getFactor() {
 	isCharNum = false;
 	syntax(__func__);
 
-
-
 	if (isIdentifier()) {
 
 		Token* t1 = new Token(*currentToken); // id
@@ -329,14 +325,15 @@ string getFactor() {
 			getLSBracket();
 			string index = getExp();
 			getRSBracket();
-			string result = getTemp();
+			TableItemDataType dataType = symbolTable->getTypeByIrName(id);
+			string result = getTemp(dataType);
 			ir.arrGet(id, index, result);
 			return result;
 		} else if (isLParen()) {	// call function with return value
 			// todo: check if has return 
 			getFuncCall(id);
 			
-			string tmpName = getTemp();
+			string tmpName = getTemp(symbolTable->getTypeByIrName(id));
 			ir.assign(tmpName, v0);
 			return tmpName;
 		} else {	// just id, return irName
@@ -353,7 +350,6 @@ string getFactor() {
 		getRParen();
 		return result;
 	}
-	error("factor error");
 }
 
 
@@ -557,7 +553,7 @@ void getPrintfStm() {
 	} else {
 		string exp = getExp();
 		TableItemDataType type = symbolTable->getTypeByIrName(exp);
-		if (type == T_CHAR) {
+		if (type == T_CHAR ) {	// TODO check this
 			ir.printChar(exp);
 		}
 		else ir.printExp(exp);

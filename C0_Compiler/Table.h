@@ -78,8 +78,8 @@ public:
 
 	static int tempItemCount;
 	
-	TempItem() {
-		this->dataType = T_INT;
+	TempItem(TableItemDataType dataType) {
+		this->dataType = dataType;
 		this->type = T_TEMP;
 		this->irName = TEMP_STRING + to_string((tempItemCount)++);
 	}
@@ -137,6 +137,12 @@ public:
 			}
 		}
 		for (auto item : funcItems) {
+			if (item.second->irName == name) {
+				return item.second;
+			}
+		}
+
+		for (auto item : tempItems) {
 			if (item.second->irName == name) {
 				return item.second;
 			}
