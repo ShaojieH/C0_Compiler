@@ -4,11 +4,7 @@
 
 
 
-bool isNumber(const string& s) {
-	auto it = s.begin();
-	while (it != s.end() && (isdigit(*it) || (*it) == '-')) ++it;
-	return !s.empty() && it == s.end();
-}
+
 
 bool isCompare(string op) {
 	return op == BGE_STRING 

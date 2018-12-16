@@ -1,0 +1,9 @@
+
+int add2(){
+	char c;
+	return ((c));
+}
+void main(){
+
+}
+

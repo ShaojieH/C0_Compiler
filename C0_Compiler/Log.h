@@ -28,7 +28,7 @@ void lexError(string info = "", int lineCount = 0) {
 
 void syntaxError(string info = "", int lineCount = 0) {
 	hasError = true;
-	cout << "Syntax Error: " << info << "at line " << lineCount << endl;
+	cout << "Syntax Error: " << info << " at line " << lineCount << endl;
 
 }
 

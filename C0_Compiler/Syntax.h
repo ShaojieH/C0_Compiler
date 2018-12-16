@@ -33,7 +33,8 @@ bool isInFuncDef = false;
 bool isMainPresent = true;
 
 bool isCharNum = false;
-
+bool hasReturn = false;
+TableItemDataType currentFuncRetType = T_INVALID;
 
 void getProgram() {
 	symbolTable->addTable();
@@ -154,9 +155,9 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 	if (isInFuncDef) {
 		syntaxError("Function define within function");
 	}
-
+	currentFuncRetType = retType;
 	isInFuncDef = true;
-
+	hasReturn = false;
 	if (retType == T_VOID
 		&& identifier  == "main") {
 		getMainFunc();
@@ -194,8 +195,12 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 
 	symbolTable->removeTable();
 
-	isInFuncDef = false;
 
+	if (retType != T_VOID &&  !hasReturn) {
+		syntaxError("Function doesn't have return", lineCount);
+	}
+	isInFuncDef = false;
+	hasReturn = false;
 	if (isFuncRetType()) {
 		TableItemDataType retType = getFuncRetType();
 		string identifier = getIdentifierOrMain();
@@ -324,16 +329,20 @@ string getFactor() {
 		if (isLSBracket()) {	// array index
 			getLSBracket();
 			string index = getExp();
+			checkArray(id, index);
 			getRSBracket();
 			TableItemDataType dataType = symbolTable->getTypeByIrName(id);
 			string result = getTemp(dataType);
 			ir.arrGet(id, index, result);
 			return result;
 		} else if (isLParen()) {	// call function with return value
-			// todo: check if has return 
+			TableItemDataType retType = symbolTable->getTypeByIrName(id);
+			if (retType != T_INT && retType != T_CHAR) {
+				syntaxError("Function not callabel", lineCount);
+			}
 			getFuncCall(id);
 			
-			string tmpName = getTemp(symbolTable->getTypeByIrName(id));
+			string tmpName = getTemp(retType);
 			ir.assign(tmpName, v0);
 			return tmpName;
 		} else {	// just id, return irName
@@ -353,7 +362,7 @@ string getFactor() {
 }
 
 
-void getStm() {	// todo: need ir?
+void getStm() {	
 	syntax(__func__);
 	if (isIf()) {
 		getConditionStm();
@@ -385,7 +394,7 @@ void getStm() {	// todo: need ir?
 		getSemi();
 	}
 }
-void getAssignStm(string identifier) {	// TODO : test semantic
+void getAssignStm(string identifier) {
 	syntax(__func__);
 	string left = identifier;
 	string index;
@@ -393,11 +402,17 @@ void getAssignStm(string identifier) {	// TODO : test semantic
 	if (isLSBracket()) {
 		getLSBracket();
 		index = getExp();
+		checkArray(left, index);
+
 		getRSBracket();
 		isLeftArr = true;
 	}
 	getAssign();
 	string right = getExp();
+	if ((symbolTable->getTypeByIrName(left) == T_INT && symbolTable->getTypeByIrName(right) != T_INT && !isNumber(right))
+		|| (symbolTable->getTypeByIrName(left) == T_CHAR && symbolTable->getTypeByIrName(right) != T_CHAR && !isCharNum)) {
+		syntaxError("Assign wrong type", lineCount);
+	}
 	if (isLeftArr) {
 		ir.arrSet(left, index, right);
 	} else {
@@ -491,6 +506,7 @@ void getFuncCall(string identifier) {	// TODO: check if param match
 	syntax(__func__);
 	getLParen();
 	vector<string> valParams = getValParamList();
+	// vector<string> params = symbolTable->getParamByFuncIrName();
 	getRParen();
 	vector<BaseItem*> items = symbolTable->top()->getAllItems();
 
@@ -553,7 +569,7 @@ void getPrintfStm() {
 	} else {
 		string exp = getExp();
 		TableItemDataType type = symbolTable->getTypeByIrName(exp);
-		if (type == T_CHAR ) {	// TODO check this
+		if (type == T_CHAR ) {
 			ir.printChar(exp);
 		}
 		else ir.printExp(exp);
@@ -569,9 +585,16 @@ void getRetStm() {
 	if (isLParen()) {
 		getLParen();
 		string retVal = getExp();
+		if ((symbolTable->getTypeByIrName(retVal) != currentFuncRetType) && !(currentFuncRetType == T_INT && isNumber(retVal))) {
+			syntaxError("Wrong return type", lineCount);
+		}
 		ir.ret(retVal);
 		getRParen();
 	} else {
+		if (currentFuncRetType != T_VOID) {
+			syntaxError("Function has a return type", lineCount);
+		}
 		ir.ret();
 	}
+	hasReturn = true;
 }

@@ -1,0 +1,15 @@
+void add(){
+}
+
+int add2(){
+}
+
+void main(){
+	int a;
+	char c;
+	a = add();
+	a = add2();
+	c = add();
+	c = add2();
+}
+

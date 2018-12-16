@@ -261,7 +261,7 @@ string getIdentifier() {
 	return getIdentifier();
 }
 
-string getIdentifierFromTable () {	// TODO: wtf??
+string getIdentifierFromTable () {
 	if (isIdentifier()) {
 		string id = currentToken->tokenValue->idOrString;
 		getNextToken();
@@ -555,4 +555,15 @@ string getTemp(TableItemDataType dataType = T_INT) {
 	symbolTable->insertSymbol(tmpName, item);
 	ir.tempDef(tmpName);
 	return tmpName;
+}
+
+
+void checkArray(string left, string index) {
+	int arrSize = symbolTable->getArrSizeByIrName(left);
+	if (arrSize <= 0) {
+		syntaxError("Not an array", lineCount);
+	}
+	if (isNumber(index) && (stoi(index) < 0 || stoi(index) >= arrSize)) {
+		syntaxError("Index invalid", lineCount);
+	}
 }

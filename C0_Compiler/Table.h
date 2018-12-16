@@ -1,5 +1,14 @@
 #pragma once
 #include "Token.h"
+
+
+bool isNumber(const string& s) {
+	auto it = s.begin();
+	while (it != s.end() && (isdigit(*it) || (*it) == '-')) ++it;
+	return !s.empty() && it == s.end();
+}
+
+
 class BaseItem {
 public:
 	TableItemType type;
@@ -246,4 +255,16 @@ public:
 		}
 		return T_INVALID;
 	}
+
+	int getArrSizeByIrName(string irName) {
+		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
+			BaseItem* result = (*i)->findByIr(irName);
+			if (result  && result->type == T_VAR) {
+				return ((VarItem*)result)->arraySize;
+			}
+		}
+		return -1;
+	}
+
+
 };

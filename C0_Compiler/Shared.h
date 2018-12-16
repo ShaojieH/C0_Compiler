@@ -8,7 +8,7 @@
 
 using namespace std;
 fstream inputFile;
-string FILE_NAME = "..\\..\\C0_Compiler\\C0_Compiler\\printChar.txt";
+string FILE_NAME = "..\\..\\C0_Compiler\\C0_Compiler\\return.txt";
 
 const string MARS_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mars.jar";
 const string ASM_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mips.asm";
@@ -26,13 +26,19 @@ int charCount = 1;
 
 bool isFileNameInputFromConsole = true;
 
+void addLine(string FILE_NAME) {
+	ofstream outfile;
+	outfile.open(FILE_NAME, std::ios_base::app);
+	outfile << "\n";
+}
+
 void init() {
 	if (isFileNameInputFromConsole) {
 		cout << "Enter input file path" << endl;
 		getline(cin, FILE_NAME);
 		FILE_NAME.erase(remove(FILE_NAME.begin(), FILE_NAME.end(), '"'), FILE_NAME.end());
 	}
-
+	addLine(FILE_NAME);
 	inputFile = fstream(FILE_NAME, fstream::in);
 
 	symbolTable = new SymbolTable();
