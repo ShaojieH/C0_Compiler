@@ -148,7 +148,6 @@ void getVoid() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getVoid();
 }
 
 void getLParen() {
@@ -158,7 +157,6 @@ void getLParen() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getLParen();
 }
 
 void getRParen() {
@@ -168,7 +166,6 @@ void getRParen() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getLParen();
 }
 void getLBracket() {
 	if (isLBracket()) {
@@ -177,7 +174,6 @@ void getLBracket() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getLBracket();
 }
 
 void getRBracket() {
@@ -187,7 +183,6 @@ void getRBracket() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getRBracket();
 }
 
 void getMain() {
@@ -197,7 +192,6 @@ void getMain() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getMain();
 }
 
 void getConst() {
@@ -207,7 +201,6 @@ void getConst() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getConst();
 }
 
 void getInt() {
@@ -217,7 +210,6 @@ void getInt() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getInt();
 }
 
 void getChar() {
@@ -227,7 +219,6 @@ void getChar() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getChar();
 }
 
 void getSemi() {
@@ -237,7 +228,6 @@ void getSemi() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getSemi();
 }
 
 void getComma() {
@@ -247,7 +237,6 @@ void getComma() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getComma();
 }
 
 string getIdentifier() {
@@ -258,7 +247,7 @@ string getIdentifier() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	return getIdentifier();
+	return ERROR_FILLER;
 }
 
 string getIdentifierFromTable () {
@@ -270,12 +259,12 @@ string getIdentifierFromTable () {
 			return result->irName;
 		} else {
 			lexError("Id not declared");
-			return getIdentifierFromTable();
+			return ERROR_FILLER;
 		}
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	return getIdentifierFromTable();
+	return ERROR_FILLER;
 }
 
 string getIdentifierOrMain() {
@@ -290,7 +279,7 @@ string getIdentifierOrMain() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	return getIdentifierOrMain();
+	return ERROR_FILLER;
 	
 }
 
@@ -302,7 +291,6 @@ void getAssign() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getAssign();
 }
 
 
@@ -314,7 +302,7 @@ char getCharVal() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	return getCharVal();
+	return 'f';
 }
 
 TableItemDataType getType() {
@@ -325,7 +313,7 @@ TableItemDataType getType() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	return getType();
+	return T_INVALID;
 }
 
 int getPlus() {
@@ -336,7 +324,7 @@ int getPlus() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	return getPlus();
+	return 1;
 }
 
 string getPlusString() {
@@ -347,7 +335,7 @@ string getPlusString() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	return getPlusString();
+	return ADD_STRING;
 }
 
 string getMulString() {
@@ -358,7 +346,7 @@ string getMulString() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	return getMulString();
+	return MUL_STRING;
 }
 
 int getUnsignedNumVal() {
@@ -369,7 +357,7 @@ int getUnsignedNumVal() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	return getUnsignedNumVal();
+	return 0;
 }
 
 
@@ -388,7 +376,6 @@ void getIf() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	getIf();
 }
 
 void getElse() {
@@ -398,7 +385,6 @@ void getElse() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	getElse();
 }
 
 string getCmp() {
@@ -439,7 +425,7 @@ string getCmp() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	return getCmp();
+	return BEQ_STRING;
 }
 
 void getDo() {
@@ -449,7 +435,6 @@ void getDo() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	getDo();
 }
 
 void getWhile() {
@@ -459,7 +444,6 @@ void getWhile() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	getWhile();
 }
 
 void getFor() {
@@ -469,7 +453,6 @@ void getFor() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	getFor();
 }
 
 void getScanf() {
@@ -479,7 +462,6 @@ void getScanf() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	getScanf();
 }
 
 void getPrintf() {
@@ -489,7 +471,6 @@ void getPrintf() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	getPrintf();
 }
 
 void getRet() {
@@ -499,8 +480,6 @@ void getRet() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	getRet();
-
 }
 
 string getStrVal() {
@@ -511,7 +490,7 @@ string getStrVal() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	return getStrVal();
+	return ERROR_FILLER;
 }
 
 TableItemDataType getFuncRetType() {
@@ -527,7 +506,7 @@ TableItemDataType getFuncRetType() {
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	return getFuncRetType();
+	return T_INVALID;
 }
 
 void getLSBracket() {
@@ -537,7 +516,6 @@ void getLSBracket() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getLSBracket();
 }
 
 void getRSBracket() {
@@ -547,7 +525,6 @@ void getRSBracket() {
 	}
 	getNextToken();
 	lexError(__func__, lineCount);
-	getRSBracket();
 }
 string getTemp(TableItemDataType dataType = T_INT) {
 	TempItem* item = new TempItem(dataType);

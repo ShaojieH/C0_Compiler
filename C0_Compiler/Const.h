@@ -72,6 +72,8 @@ const string TEMP_STRING = "TEMP";
 
 const string END_STRING = "END";
 
+const string FILLER = "FILLER";
+
 typedef enum  TokenType{
 	ID, NUMBER, 
 	CHAR, STRING, 
