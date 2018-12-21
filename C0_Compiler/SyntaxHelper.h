@@ -1,6 +1,9 @@
 #pragma once
 #include "Lex.h"
 
+// global state
+bool isCharNum = false;
+
 // is helpers
 
 bool isConst() {
@@ -543,4 +546,12 @@ void checkArray(string left, string index) {
 	if (isNumber(index) && (stoi(index) < 0 || stoi(index) >= arrSize)) {
 		syntaxError("Index invalid", lineCount);
 	}
+}
+
+bool isIntSyntax(string exp) {
+	return symbolTable->getTypeByIrName(exp) == T_INT || isNumber(exp) || !isCharNum;
+}
+
+bool isCharSyntax(string exp) {
+	return symbolTable->getTypeByIrName(exp) == T_CHAR  || isCharNum;
 }

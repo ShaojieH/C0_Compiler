@@ -32,7 +32,7 @@ void getRetStm();
 bool isInFuncDef = false;
 bool isMainPresent = true;
 
-bool isCharNum = false;
+
 bool hasReturn = false;
 string currentFuncIrName = "";
 TableItemDataType currentFuncRetType = T_INVALID;
@@ -358,8 +358,10 @@ string getFactor() {
 		return to_string((int)getCharVal());
 	}else {
 		getLParen();
+		isCharNum = false;
 		string result = getExp();
 		getRParen();
+		isCharNum = false;
 		return result;
 	}
 }
@@ -412,8 +414,8 @@ void getAssignStm(string identifier) {
 	}
 	getAssign();
 	string right = getExp();
-	if ((symbolTable->getTypeByIrName(left) == T_INT && symbolTable->getTypeByIrName(right) != T_INT && !isNumber(right))
-		|| (symbolTable->getTypeByIrName(left) == T_CHAR && symbolTable->getTypeByIrName(right) != T_CHAR && !isCharNum)) {
+	if ((symbolTable->getTypeByIrName(left) == T_INT && !isIntSyntax(right))
+		|| (symbolTable->getTypeByIrName(left) == T_CHAR && !isCharSyntax(right) )) {
 		syntaxError("Assign wrong type", lineCount);
 	}
 	if (isLeftArr) {
@@ -592,7 +594,8 @@ void getRetStm() {
 	if (isLParen()) {
 		getLParen();
 		string retVal = getExp();
-		if ((symbolTable->getTypeByIrName(retVal) != currentFuncRetType) && !(currentFuncRetType == T_INT && isNumber(retVal))) {
+		if ((currentFuncRetType == T_INT && !isIntSyntax(retVal))
+			|| (currentFuncRetType == T_CHAR && !isCharSyntax(retVal))) {
 			syntaxError("Wrong return type", lineCount);
 		}
 		ir.ret(retVal);
@@ -605,3 +608,6 @@ void getRetStm() {
 	}
 	hasReturn = true;
 }
+
+
+// todo 常数赋值， 函数调用检查参数

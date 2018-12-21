@@ -13,7 +13,7 @@ string FILE_NAME = "..\\..\\C0_Compiler\\C0_Compiler\\return.txt";
 const string MARS_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mars.jar";
 const string ASM_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mips.asm";
 const string ASM_OPTIMIZED_PATH = "..\\..\\C0_Compiler\\C0_Compiler\\Mips_opt.asm";
-const string MARS_COMMAND = "java -jar " + MARS_PATH + "  " + ASM_OPTIMIZED_PATH;
+const string MARS_COMMAND = "java -jar " + MARS_PATH + "  " + ASM_PATH;
 
 
 Token* currentToken;

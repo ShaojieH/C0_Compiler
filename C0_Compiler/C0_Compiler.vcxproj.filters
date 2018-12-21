@@ -25,6 +25,9 @@
     <Filter Include="test_error">
       <UniqueIdentifier>{218e2379-f010-4796-a017-370448a378dd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="test\forum">
+      <UniqueIdentifier>{041241bc-6d63-470e-bbaf-a233ee8fd863}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Lex.h">
@@ -157,6 +160,24 @@
     </Text>
     <Text Include="return.txt">
       <Filter>test_error</Filter>
+    </Text>
+    <Text Include="16182644.txt">
+      <Filter>test\forum</Filter>
+    </Text>
+    <Text Include="16061106.txt">
+      <Filter>test\forum</Filter>
+    </Text>
+    <Text Include="16231281.txt">
+      <Filter>test\forum</Filter>
+    </Text>
+    <Text Include="16231032.txt">
+      <Filter>test\forum</Filter>
+    </Text>
+    <Text Include="16061125.txt">
+      <Filter>test\forum</Filter>
+    </Text>
+    <Text Include="16061167.txt">
+      <Filter>test\forum</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

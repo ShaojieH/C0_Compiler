@@ -124,7 +124,7 @@ string scanfChar(string dst) {
 
 string neg(QuadCode code) {
 	if (isNumber(code.third)) {
-		return move(code.second, "-"+code.third);
+		return move(code.second, to_string((-1) * stoi(code.third)));
 	} else {
 		return move(t0, code.third)
 			+ "neg $t0 $t0" + "\n"
