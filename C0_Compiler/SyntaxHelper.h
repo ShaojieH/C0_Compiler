@@ -2,7 +2,7 @@
 #include "Lex.h"
 
 // global state
-bool isCharNum = false;
+bool isCharNumVal = false;
 
 // is helpers
 
@@ -549,9 +549,13 @@ void checkArray(string left, string index) {
 }
 
 bool isIntSyntax(string exp) {
-	return symbolTable->getTypeByIrName(exp) == T_INT || isNumber(exp) || !isCharNum;
+	return ( symbolTable->getTypeByIrName(exp) == T_INT || isNumber(exp) ) && !isCharNumVal;
 }
 
 bool isCharSyntax(string exp) {
-	return symbolTable->getTypeByIrName(exp) == T_CHAR  || isCharNum;
+	return symbolTable->getTypeByIrName(exp) == T_CHAR  || isCharNumVal;
+}
+
+bool isIdConst(string id) {
+	return symbolTable->getTableTypeByIrName(id) == T_CONST;
 }

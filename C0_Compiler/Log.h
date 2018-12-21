@@ -29,9 +29,13 @@ void lexError(string info = "", int lineCount = 0) {
 void syntaxError(string info = "", int lineCount = 0) {
 	hasError = true;
 	cout << "Syntax Error: " << info << " at line " << lineCount << endl;
-
 }
 
 void table(string info = "") {
 	 // cout << "Table: " << info << endl;
+}
+
+void unknownError(string info = "", int lineCount = 0) {
+	hasError = true;
+	cout << "Unknown Error: " << info << " at line " << lineCount << endl;
 }

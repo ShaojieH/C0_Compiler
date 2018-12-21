@@ -272,12 +272,13 @@ string getExp() {
 	syntax(__func__);
 	int sign = 1;
 	if (isPlus()) {
+		isCharNumVal = false;
 		sign = getPlus();
 	}
 	string result = getTerm();
 
 	if (sign == -1) {
-
+		isCharNumVal = false;
 		string tmp = getTemp();
 
 		ir.calc(NEG_STRING, tmp, result);
@@ -296,6 +297,7 @@ string getExp() {
 		right = getTerm();
 		ir.calc(op, result, left, right);
 		left = result;
+		isCharNumVal = false;
 	}
 	return left;
 }
@@ -312,12 +314,13 @@ string getTerm() {
 		right = getFactor();
 		ir.calc(op, result, left, right);
 		left = result;
+		isCharNumVal = false;
 	}
 	return left;
 }
 
 string getFactor() {
-	isCharNum = false;
+	isCharNumVal = false;
 	syntax(__func__);
 
 	if (isIdentifier()) {
@@ -341,10 +344,12 @@ string getFactor() {
 		} else if (isLParen()) {	// call function with return value
 			TableItemDataType retType = symbolTable->getTypeByIrName(id);
 			if (retType != T_INT && retType != T_CHAR) {
-				syntaxError("Function not callabel", lineCount);
+				syntaxError("Function doesn't have return value", lineCount);
 			}
 			getFuncCall(id);
-			
+			if (retType == T_CHAR) {
+			 	isCharNumVal =  true;
+			 }
 			string tmpName = getTemp(retType);
 			ir.assign(tmpName, v0);
 			return tmpName;
@@ -354,14 +359,14 @@ string getFactor() {
 	}else if (isNumber() || isPlus()) {	// a = 1 + -1
 		return to_string(getNumVal());
 	}else if (isCharVal()) {
-		isCharNum = true;
+		isCharNumVal = true;
 		return to_string((int)getCharVal());
 	}else {
 		getLParen();
-		isCharNum = false;
+		isCharNumVal = false;
 		string result = getExp();
 		getRParen();
-		isCharNum = false;
+		isCharNumVal = false;
 		return result;
 	}
 }
@@ -402,6 +407,11 @@ void getStm() {
 void getAssignStm(string identifier) {
 	syntax(__func__);
 	string left = identifier;
+
+	if (isIdConst(identifier)) {
+		syntaxError("Assigning to const", lineCount);
+	}
+
 	string index;
 	bool isLeftArr = false;
 	if (isLSBracket()) {
@@ -414,8 +424,8 @@ void getAssignStm(string identifier) {
 	}
 	getAssign();
 	string right = getExp();
-	if ((symbolTable->getTypeByIrName(left) == T_INT && !isIntSyntax(right))
-		|| (symbolTable->getTypeByIrName(left) == T_CHAR && !isCharSyntax(right) )) {
+	if ((symbolTable->getTypeByIrName(left) == T_INT && isCharSyntax(right))
+		|| (symbolTable->getTypeByIrName(left) == T_CHAR && isIntSyntax(right))) {
 		syntaxError("Assign wrong type", lineCount);
 	}
 	if (isLeftArr) {
@@ -451,9 +461,15 @@ void getConditionStm() {
 void getCondition(string label) {
 	syntax(__func__);
 	string left = getExp();
+	if (isCharSyntax(left)) {
+		syntaxError("Can only compare int", lineCount);
+	}
 	if (isCmp()) {
 		string cmp = getCmp();	// reversed
 		string right = getExp();
+		if (isCharSyntax(right)) {
+			syntaxError("Can only compare int", lineCount);
+		}
 		ir.jmp(cmp, left, right, label);
 	} else {
 		ir.jmp(left, label);
@@ -507,11 +523,13 @@ int getStep() {
 	syntax(__func__);
 	return getUnsignedNumVal();
 }
-void getFuncCall(string identifier) {	// TODO: check if param match
+void getFuncCall(string identifier) {
 	syntax(__func__);
 	getLParen();
 	vector<string> valParams = getValParamList();
 	// vector<string> params = symbolTable->getParamByFuncIrName();
+
+
 	getRParen();
 	vector<BaseItem*> items = symbolTable->top()->getAllItems();
 
@@ -570,7 +588,7 @@ void getPrintfStm() {
 			getComma();
 			string exp = getExp();
 			TableItemDataType type = symbolTable->getTypeByIrName(exp);
-			if (type == T_CHAR || isCharNum) {
+			if (type == T_CHAR || isCharNumVal) {
 				ir.printChar(exp);
 			}
 			else ir.printExp(exp);
@@ -586,7 +604,7 @@ void getPrintfStm() {
 	ir.printEnter();
 	getRParen();
 
-	isCharNum = false;
+	isCharNumVal = false;
 }
 void getRetStm() {
 	syntax(__func__);
@@ -610,4 +628,4 @@ void getRetStm() {
 }
 
 
-// todo 常数赋值， 函数调用检查参数
+// todo  函数参数

@@ -139,11 +139,11 @@
   <ItemGroup>
     <Text Include="16061106.txt" />
     <Text Include="16061125.txt" />
-    <Text Include="16061167.txt" />
     <Text Include="16182644.txt" />
     <Text Include="16231032.txt" />
     <Text Include="16231232_test.txt" />
     <Text Include="16231281.txt" />
+    <Text Include="type_error.txt" />
     <Text Include="call_func.txt" />
     <Text Include="expected.txt" />
     <Text Include="lex.txt" />

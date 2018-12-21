@@ -1,10 +1,14 @@
 int a0;
 int b1[2],b2[2];
 
+char shit(){
+	return ('s');
+}
+
 void test_if_relational_operator(){
 	const int a0 = 5;
 	const int b1 = 10;
-	if(a0 >= b1){
+	if(shit() >= 'c'){
 		printf("Greater or equal error");
 	} else{
 		printf("a0 < b1");
@@ -15,3 +19,8 @@ void test_if_relational_operator(){
 void main(){
 	test_if_relational_operator();
 }
+
+
+
+
+

@@ -61,7 +61,7 @@ public:
 			this->data.push_back(spaceAlloc(code.second, DATA_SIZE));
 		}
 
-		else if (code.first == FUNC_STRING) {	// TODO: test this
+		else if (code.first == FUNC_STRING) {
 			if (code.second == DEF_STRING) {
 				this->text.push_back(label(code.fourth));
 			} else if(code.second == PARAM_STRING){

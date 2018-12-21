@@ -256,6 +256,17 @@ public:
 		return T_INVALID;
 	}
 
+	TableItemType getTableTypeByIrName(string irName) {
+		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
+			BaseItem* result = (*i)->findByIr(irName);
+			if (result) {
+				return result->type;
+			}
+		}
+		unknownError("Table item type invalid");
+		return T_VAR;
+	}
+
 	int getArrSizeByIrName(string irName) {
 		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
 			BaseItem* result = (*i)->findByIr(irName);

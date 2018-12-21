@@ -145,6 +145,8 @@ string calculateImme(string op, int left, int right) {
 	if (op == DIV_STRING) {
 		return to_string(left / right);
 	}
+	unknownError("Invalid immediate operator");
+	return ERROR_FILLER;
 }
 
 string calculate(string op, string des, string left, string right) {

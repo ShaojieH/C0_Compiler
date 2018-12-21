@@ -1,14 +1,13 @@
-void main(){
-	int a, b[5];
-	char c, ch[6];
+char fuck(){
+	return ('c');
+}
 
-	a = 1;
-	b[4] = 3;
-	a = b[2];
-	
-	c = 'd';
-	ch[1] = 'a';
-	ch[3] = c;
-	ch[2] = ch[3];
-	ch[c] = ch[c];
+int shit(){
+	return ('c'+fuck());
+}
+
+void main(){
+	int a;
+	a = shit();
+	a = 'c';
 }

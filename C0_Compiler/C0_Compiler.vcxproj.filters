@@ -176,8 +176,8 @@
     <Text Include="16061125.txt">
       <Filter>test\forum</Filter>
     </Text>
-    <Text Include="16061167.txt">
-      <Filter>test\forum</Filter>
+    <Text Include="type_error.txt">
+      <Filter>test_error</Filter>
     </Text>
   </ItemGroup>
   <ItemGroup>

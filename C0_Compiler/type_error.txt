@@ -1,0 +1,44 @@
+int int_arr[2];
+char char_arr[2];
+
+char getChar(){
+	return ('c');
+}
+
+int getInt(){
+	return (1);
+}
+
+void main(){
+	int a;
+	char c;
+	a = getChar();
+	a = getInt();
+	c = getChar();
+	c = getInt();
+	a = 1;
+	a = 'c';
+	a = ('c');
+	c = 1;
+	c = 'c';
+	c = ('c');
+	if('a' <= getChar()){
+		printf("Error");
+	}
+
+	if(1 <= getInt()){
+		printf("Error");
+	}
+
+	if(2 + 'a' <= ('c')){
+		printf("Error");
+	}
+}
+
+
+
+
+
+
+
+
