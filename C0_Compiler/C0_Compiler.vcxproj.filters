@@ -191,6 +191,9 @@
     <Text Include="16231247_test1.txt">
       <Filter>test\forum</Filter>
     </Text>
+    <Text Include="aaaaaaaaaaaaaa.txt">
+      <Filter>test\forum</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mips.asm">
