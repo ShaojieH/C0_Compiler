@@ -12,16 +12,20 @@ int getInt(){
 void main(){
 	int a;
 	char c;
-	a = getChar();
 	a = getInt();
-	c = getChar();
-	c = getInt();
+	a = getChar();
 	a = 1;
 	a = 'c';
 	a = ('c');
+	a = char_arr[0];
+	a = (c);
 	c = 1;
 	c = 'c';
 	c = ('c');
+	c = char_arr[0];
+	c = (c);
+	c = getChar();
+	c = getInt();
 	if('a' <= getChar()){
 		printf("Error");
 	}
@@ -34,6 +38,12 @@ void main(){
 		printf("Error");
 	}
 }
+
+
+
+
+
+
 
 
 

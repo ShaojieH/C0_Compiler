@@ -179,6 +179,18 @@
     <Text Include="type_error.txt">
       <Filter>test_error</Filter>
     </Text>
+    <Text Include="param.txt">
+      <Filter>test_error</Filter>
+    </Text>
+    <Text Include="type_error2.txt">
+      <Filter>test_error</Filter>
+    </Text>
+    <Text Include="16231247.txt">
+      <Filter>test\forum</Filter>
+    </Text>
+    <Text Include="16231247_test1.txt">
+      <Filter>test\forum</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mips.asm">

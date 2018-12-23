@@ -1,0 +1,54 @@
+const int a0 = 0, a1 = 1;
+const int a2 = 2;
+const char _b0b = '3', b1b = '4';
+const char b2b = '5';
+int c0,c1,c2[10];
+char d0,d1,d2[10];
+
+int add(int a, int b){
+	const int a0 = 1;
+	char b0;
+	int c0;
+	b0 = 'a';
+	c0 = 1;
+	c2[0] = 1;
+	return (a + b);
+}
+
+char myScan(){
+	char temp;
+	scanf(temp);
+	return (temp);
+}
+
+void myPrint(int a, int b){
+	printf("Hello world!");
+	printf("Oh", a);
+	printf(b);
+}
+
+void main(){
+	int result;
+	int result2;
+	int i;
+	d2[5] = myScan();
+	for(i = 0; i < 3; i=i+1){
+		result = -1 + 5*a0 - (+a2 / a1 + (3 + add(a0, a1)));
+		result2 = d2[5] - 'a' + 'A';
+		myPrint(result, result2);
+	}
+	c2[0] = 0;
+	c2[1] = 20;
+	do{
+		d2[0] = 'a';
+		d2[1] = 'b';
+		if(c2[0] - c2[0] / 2 * 2){
+			c2[0] = c2[0] + 1;
+		} else c2[0] = c2[0] + 3;
+	}while(c2[0] != c2[1])
+	if('a'+0 < 'b'+0) printf("a<b");
+	;
+	;
+	;
+}
+

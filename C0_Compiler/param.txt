@@ -1,0 +1,21 @@
+void func(){
+}
+
+void func1(int i){
+}
+
+void func2(char c, int i){
+}
+void main(){
+	func1();
+	func(3);
+	func1('c');
+	func2();
+	func2(1,2,3,4,5);
+	func2(3,4);
+}
+
+
+
+
+

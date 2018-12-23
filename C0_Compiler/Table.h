@@ -245,7 +245,19 @@ public:
 		}
 		return result;
 	}
-
+	BaseItem* getBaseItemByIrName(string irName) {
+		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
+			BaseItem* result = (*i)->findByIr(irName);
+			if (result) {
+				return result;
+			}
+		}
+		return new BaseItem();
+	}
+	/*
+	
+	
+	
 	TableItemDataType getTypeByIrName(string irName) {
 		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
 			BaseItem* result = (*i)->findByIr(irName);
@@ -267,6 +279,17 @@ public:
 		return T_VAR;
 	}
 
+	vector<Param> getParamByFuncIrName(string irName) {
+		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
+			BaseItem* result = (*i)->findByIr(irName);
+			if (result && result->type == T_FUNC) {
+				return ((FuncItem*)result)->params;
+			}
+		}
+		unknownError("Func ir name invalid");
+		return vector<Param>();
+	}
+
 	int getArrSizeByIrName(string irName) {
 		for (auto i = tables.rbegin(); i != tables.rend(); ++i) {
 			BaseItem* result = (*i)->findByIr(irName);
@@ -276,6 +299,5 @@ public:
 		}
 		return -1;
 	}
-
-
+	*/
 };

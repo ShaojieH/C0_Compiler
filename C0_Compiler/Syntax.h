@@ -12,17 +12,17 @@ void getFuncDef(TableItemDataType retType, string identifier);
 void getCompoundStm();
 vector<Param> getParamList();
 void getMainFunc();
-string getExp();
-string getTerm();
-string getFactor();
+Value getExp();
+Value getTerm();
+Value getFactor();
 void getStm();
-void getAssignStm(string identifier);
+void getAssignStm(BaseItem* identifier);
 void getConditionStm();
 void getCondition(string label);
 void getLoopStm();
 int getStep();
-void getFuncCall(string identifier);
-vector<string> getValParamList();
+void getFuncCall(BaseItem* identifier);
+vector<Value> getValParamList();
 void getStmList();
 void getScanfStm();
 void getPrintfStm();
@@ -268,107 +268,92 @@ void getMainFunc() {
 
 
 
-string getExp() {
+Value getExp() {
 	syntax(__func__);
 	int sign = 1;
 	if (isPlus()) {
-		isCharNumVal = false;
 		sign = getPlus();
 	}
-	string result = getTerm();
+	Value result = getTerm();
 
 	if (sign == -1) {
-		isCharNumVal = false;
+		result.type = T_INT;
 		string tmp = getTemp();
-
-		ir.calc(NEG_STRING, tmp, result);
-		result = tmp;
+		ir.calc(NEG_STRING, tmp, result.val);
+		result.val = tmp;
 	}
 
-	string right;
+	Value right;
 	string op;
-	string left = result;
+	Value left = result;
 
 	while (isPlus()) {
-
-
-		result = getTemp();
+		result.type = T_INT;
+		result.val = getTemp();
 		op = getPlusString();
 		right = getTerm();
-		ir.calc(op, result, left, right);
+		ir.calc(op, result.val, left.val, right.val);
 		left = result;
-		isCharNumVal = false;
 	}
 	return left;
 }
-string getTerm() {
+Value getTerm() {
 	syntax(__func__);
-	string result = getFactor();
-	string right;
+	Value result = getFactor();
+	Value right;
 	string op;
-	string left = result;
+	Value left = result;
 
 	while (isMul()) {
-		result = getTemp();
+		result.val = getTemp();
 		op = getMulString();
 		right = getFactor();
-		ir.calc(op, result, left, right);
+		ir.calc(op, result.val, left.val, right.val);
 		left = result;
-		isCharNumVal = false;
+		result.type = T_INT;
 	}
 	return left;
 }
 
-string getFactor() {
-	isCharNumVal = false;
+Value getFactor() {
 	syntax(__func__);
-
+	Value result;
 	if (isIdentifier()) {
-
 		Token* t1 = new Token(*currentToken); // id
-		string id = getIdentifierFromTable();
-
-		// if (!symbolTable->findGlobalSymbol(id)) {	// TODO move to getID, add getFunction
-		// 	error("Identifier " + id +" not declared");
-		// }
-
+		BaseItem* id = getIdentifierFromTable();
+		TableItemDataType type = id->dataType;
+		result.type = type;
 		if (isLSBracket()) {	// array index
 			getLSBracket();
-			string index = getExp();
+			string index = getExp().val;
 			checkArray(id, index);
 			getRSBracket();
-			TableItemDataType dataType = symbolTable->getTypeByIrName(id);
-			string result = getTemp(dataType);
-			ir.arrGet(id, index, result);
-			return result;
+			result.val = getTemp(type);
+			ir.arrGet(id->irName, index, result.val);
 		} else if (isLParen()) {	// call function with return value
-			TableItemDataType retType = symbolTable->getTypeByIrName(id);
-			if (retType != T_INT && retType != T_CHAR) {
+			if (type != T_INT && type != T_CHAR) {
 				syntaxError("Function doesn't have return value", lineCount);
 			}
 			getFuncCall(id);
-			if (retType == T_CHAR) {
-			 	isCharNumVal =  true;
-			 }
-			string tmpName = getTemp(retType);
+			string tmpName = getTemp(type);
+			result.val = tmpName;
 			ir.assign(tmpName, v0);
-			return tmpName;
 		} else {	// just id, return irName
-			return id;
+			result.val = id->irName;
 		}
 	}else if (isNumber() || isPlus()) {	// a = 1 + -1
-		return to_string(getNumVal());
+		result.val = to_string(getNumVal());
+		result.type = T_INT;
 	}else if (isCharVal()) {
-		isCharNumVal = true;
-		return to_string((int)getCharVal());
+		result.val = to_string((int)getCharVal());
+		result.type = T_CHAR;
 	}else {
 		getLParen();
-		isCharNumVal = false;
-		string result = getExp();
+		result = getExp();
+		result.type = T_INT;
 		getRParen();
-		isCharNumVal = false;
-		return result;
 	}
+	return result;
 }
 
 
@@ -384,7 +369,7 @@ void getStm() {
 		getRBracket();
 	}else if (isIdentifier()) {// id
 		
-		string id = getIdentifierFromTable();
+		BaseItem* id = getIdentifierFromTable();
 		if (isLParen()) {	// func call
 			getFuncCall(id);
 		} else {
@@ -404,11 +389,11 @@ void getStm() {
 		getSemi();
 	}
 }
-void getAssignStm(string identifier) {
+void getAssignStm(BaseItem* identifier) {
 	syntax(__func__);
-	string left = identifier;
+	// BaseItem* left = identifier;
 
-	if (isIdConst(identifier)) {
+	if (isIdConst(identifier->irName)) {
 		syntaxError("Assigning to const", lineCount);
 	}
 
@@ -416,22 +401,21 @@ void getAssignStm(string identifier) {
 	bool isLeftArr = false;
 	if (isLSBracket()) {
 		getLSBracket();
-		index = getExp();
-		checkArray(left, index);
+		index = getExp().val;
+		checkArray(identifier, index);
 
 		getRSBracket();
 		isLeftArr = true;
 	}
 	getAssign();
-	string right = getExp();
-	if ((symbolTable->getTypeByIrName(left) == T_INT && isCharSyntax(right))
-		|| (symbolTable->getTypeByIrName(left) == T_CHAR && isIntSyntax(right))) {
+	Value right = getExp();
+	if (identifier->dataType != right.type) {
 		syntaxError("Assign wrong type", lineCount);
 	}
 	if (isLeftArr) {
-		ir.arrSet(left, index, right);
+		ir.arrSet(identifier->irName, index, right.val);
 	} else {
-		ir.assign(left, right);
+		ir.assign(identifier->irName, right.val);
 	}
 }
 
@@ -460,19 +444,19 @@ void getConditionStm() {
 }
 void getCondition(string label) {
 	syntax(__func__);
-	string left = getExp();
-	if (isCharSyntax(left)) {
+	Value left = getExp();
+	if (left.type != T_INT) {
 		syntaxError("Can only compare int", lineCount);
 	}
 	if (isCmp()) {
 		string cmp = getCmp();	// reversed
-		string right = getExp();
-		if (isCharSyntax(right)) {
+		Value right = getExp();
+		if (right.type != T_INT) {
 			syntaxError("Can only compare int", lineCount);
 		}
-		ir.jmp(cmp, left, right, label);
+		ir.jmp(cmp, left.val, right.val, label);
 	} else {
-		ir.jmp(left, label);
+		ir.jmp(left.val, label);
 	}
 }
 void getLoopStm() {
@@ -492,12 +476,14 @@ void getLoopStm() {
 	} else {	// for
 		getFor();	
 		getLParen();
-		string id = getIdentifierFromTable();	// i = 1
+		BaseItem* id = getIdentifierFromTable();	// i = 1
 		getAssign();
-		string initVal = getExp();
+		Value initVal = getExp();
 		getSemi();
-
-		ir.assign(id, initVal);
+		if (id->dataType != initVal.type) {
+			syntaxError("Assign type doesn't match in loop head", lineCount);
+		}
+		ir.assign(id->irName, initVal.val);
 
 		string finishLabel = ir.getLabel();	// i < 100
 		string cmpLabel = ir.getLabel();
@@ -505,15 +491,18 @@ void getLoopStm() {
 		getCondition(finishLabel);
 		getSemi();
 
-		string stepLeftID = getIdentifierFromTable();	// i = i + 1
+		BaseItem* stepLeftID = getIdentifierFromTable();	// i = i + 1
+		if (stepLeftID->dataType != T_INT) {
+			syntaxError("Loop variable must be int");
+		}
 		getAssign();
-		string stepRightID = getIdentifierFromTable();
+		BaseItem* stepRightID = getIdentifierFromTable();
 		string plusOrSub = getPlusString();
 		string step = to_string(getStep());
 		getRParen();
 
 		getStm();	//stm
-		ir.calc(plusOrSub, stepLeftID, stepRightID, step);
+		ir.calc(plusOrSub, stepLeftID->irName, stepRightID->irName, step);
 		ir.jmp(cmpLabel);
 		ir.label(finishLabel);
 	}
@@ -523,27 +512,30 @@ int getStep() {
 	syntax(__func__);
 	return getUnsignedNumVal();
 }
-void getFuncCall(string identifier) {
+void getFuncCall(BaseItem* identifier) {
 	syntax(__func__);
 	getLParen();
-	vector<string> valParams = getValParamList();
-	// vector<string> params = symbolTable->getParamByFuncIrName();
-
+	if (identifier->type != T_FUNC) {
+		syntaxError("Not a function",lineCount);
+	}
+	vector<Value> valParams = getValParamList();
+	vector<Param> params = ((FuncItem*)identifier)->params;
+	checkFuncCallParam(valParams, params);
 
 	getRParen();
 	vector<BaseItem*> items = symbolTable->top()->getAllItems();
 
-	if (identifier == currentFuncIrName) {
+	if (identifier->irName == currentFuncIrName) {
 		ir.pushLocals(items);
 	}
-	ir.callFunc(identifier, valParams);
-	if (identifier == currentFuncIrName) {
+	ir.callFunc(identifier->irName, valParams);
+	if (identifier->irName == currentFuncIrName) {
 		ir.popLocals(items);
 	}
 }
 
-vector<string> getValParamList() {
-	vector<string> valParams;
+vector<Value> getValParamList() {
+	vector<Value> valParams;
 	syntax(__func__);
 	if (isRParen())	return valParams;
 	valParams.push_back(getExp());
@@ -564,14 +556,12 @@ void getScanfStm() {
 	syntax(__func__);
 	getScanf();
 	getLParen();
-	string id = getIdentifierFromTable();
-	TableItemDataType type = symbolTable->getTypeByIrName(id);
-	ir.scanf(id, type);
+	BaseItem* id = getIdentifierFromTable();
+	ir.scanf(id->irName, id->dataType);
 	while (isComma()) {
 		getComma();
 		id = getIdentifierFromTable();
-		TableItemDataType type = symbolTable->getTypeByIrName(id);
-		ir.scanf(id, type);
+		ir.scanf(id->irName, id->dataType);
 	}
 	getRParen();
 	
@@ -586,37 +576,34 @@ void getPrintfStm() {
 		if (isComma()) {
 			ir.printSpace();
 			getComma();
-			string exp = getExp();
-			TableItemDataType type = symbolTable->getTypeByIrName(exp);
-			if (type == T_CHAR || isCharNumVal) {
-				ir.printChar(exp);
+			Value exp = getExp();
+			//TableItemDataType type = symbolTable->getTypeByIrName(exp);
+			if (exp.type == T_CHAR) {
+				ir.printChar(exp.val);
 			}
-			else ir.printExp(exp);
+			else ir.printExp(exp.val);
 		}
 	} else {
-		string exp = getExp();
-		TableItemDataType type = symbolTable->getTypeByIrName(exp);
-		if (type == T_CHAR ) {
-			ir.printChar(exp);
+		Value exp = getExp();
+		// TableItemDataType type = symbolTable->getTypeByIrName(exp);
+		if (exp.type == T_CHAR ) {
+			ir.printChar(exp.val);
 		}
-		else ir.printExp(exp);
+		else ir.printExp(exp.val);
 	}
 	ir.printEnter();
 	getRParen();
-
-	isCharNumVal = false;
 }
 void getRetStm() {
 	syntax(__func__);
 	getRet();
 	if (isLParen()) {
 		getLParen();
-		string retVal = getExp();
-		if ((currentFuncRetType == T_INT && !isIntSyntax(retVal))
-			|| (currentFuncRetType == T_CHAR && !isCharSyntax(retVal))) {
+		Value retVal = getExp();
+		if (currentFuncRetType != retVal.type) {
 			syntaxError("Wrong return type", lineCount);
 		}
-		ir.ret(retVal);
+		ir.ret(retVal.val);
 		getRParen();
 	} else {
 		if (currentFuncRetType != T_VOID) {
@@ -626,6 +613,3 @@ void getRetStm() {
 	}
 	hasReturn = true;
 }
-
-
-// todo  º¯Êý²ÎÊý

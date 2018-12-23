@@ -16,7 +16,7 @@ char function2(int parameter3, char parameter4)
 {
     int temp_num, i, temp_num_2;
     char temp_str;
-    if (parameter4 <= 'Z')
+    if (parameter4+0 <= 'Z'+0)
     {
         printf("Too small");
         printf("\n");
@@ -91,19 +91,19 @@ int function_cal()
         do
         {
             temp_cal = cal[i];
-            if (temp_cal >= '0') {
+            if (temp_cal+0 >= '0'+0) {
                 cal_num = temp_cal - '0';
                 cal_num1 = 10 * cal_num1 + cal_num;
                 i = i + 1;
             }
         }
-        while (temp_cal >= '0')
+        while (temp_cal+0 >= '0'+0)
         cal_flag = cal_flag + 1;
         if (cal_flag == 1)
             cal_result = cal_result + cal_num1;
         else
         {
-            if (temp_cal == str4)
+            if (temp_cal+0 == str4+0)
                 cal_result = cal_result + cal_num1;
             else
                 cal_result = cal_result + cal_num1;
@@ -130,8 +130,8 @@ void Complex_Compute()
     printf("\n e is", e);
     printf("\n f is", f);
     printf("\n g is", g);
-    x = 'x';
-    y = 'y';
+    x = 'x'+0;
+    y = 'y'+0;
     printf("\n");
     letter_only = (c - d + number4[90]) / 12 + 32 - (x * (y - 'x') - b);
     printf("\nonly_letter is:", letter_only);
@@ -187,6 +187,9 @@ void main()
     Complex_Compute();
     return ;
 }
+
+
+
 
 
 

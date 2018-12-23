@@ -121,3 +121,14 @@ const string sp = "$sp";
 const string ra = "$ra";
 const string a0 = "$a0";
 const string v0 = "$v0";
+
+
+struct Value {
+	string val;
+	TableItemDataType type;
+
+	Value() {
+		type = T_INT;
+		val = ERROR_FILLER;
+	}
+};

@@ -1,8 +1,8 @@
 #pragma once
 #include "Lex.h"
 
-// global state
-bool isCharNumVal = false;
+
+
 
 // is helpers
 
@@ -253,21 +253,24 @@ string getIdentifier() {
 	return ERROR_FILLER;
 }
 
-string getIdentifierFromTable () {
+BaseItem* getIdentifierFromTable () {
+	BaseItem* result;
 	if (isIdentifier()) {
 		string id = currentToken->tokenValue->idOrString;
 		getNextToken();
 		BaseItem* result =  symbolTable->findGlobalSymbol(id);
 		if (result) {
-			return result->irName;
+			return result;
 		} else {
 			lexError("Id not declared");
-			return ERROR_FILLER;
+			result = new BaseItem();
+			return result;
 		}
 	}
 	lexError(__func__, lineCount);
 	getNextToken();
-	return ERROR_FILLER;
+	result = new BaseItem();
+	return result;
 }
 
 string getIdentifierOrMain() {
@@ -538,8 +541,8 @@ string getTemp(TableItemDataType dataType = T_INT) {
 }
 
 
-void checkArray(string left, string index) {
-	int arrSize = symbolTable->getArrSizeByIrName(left);
+void checkArray(BaseItem* item, string index) {
+	int arrSize = item->type == T_VAR ? ((VarItem*)item)->arraySize:-1;
 	if (arrSize <= 0) {
 		syntaxError("Not an array", lineCount);
 	}
@@ -548,14 +551,25 @@ void checkArray(string left, string index) {
 	}
 }
 
-bool isIntSyntax(string exp) {
-	return ( symbolTable->getTypeByIrName(exp) == T_INT || isNumber(exp) ) && !isCharNumVal;
-}
 
-bool isCharSyntax(string exp) {
-	return symbolTable->getTypeByIrName(exp) == T_CHAR  || isCharNumVal;
-}
 
 bool isIdConst(string id) {
-	return symbolTable->getTableTypeByIrName(id) == T_CONST;
+	return symbolTable->getBaseItemByIrName(id)->type == T_CONST;
+}
+
+void checkFuncCallParam(vector<Value> valParams, vector<Param> params) {
+	if (valParams.size() != params.size()) {
+		syntaxError("Function param number doesn't match", lineCount);
+	}
+	auto itA = valParams.begin();
+	auto itB = params.begin();
+
+	while (itA != valParams.end() && itB != params.end())
+	{	
+		if (itA->type != itB->dataType) {
+			syntaxError("Function param type doesn't match", lineCount);
+		}
+		itA++;
+		itB++;
+	}
 }

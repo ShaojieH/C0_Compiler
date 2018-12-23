@@ -1,0 +1,215 @@
+const int test1 = 1, test2 = 2;
+const char _test3 = 'a', test_4 = '5';
+int a0;
+int a1;
+int a2,a3, a4,   a5;
+int a7;int a8,b5[2]   ,b6[2],b7[2],b8[2],b9[2];
+int a9;
+int b0[2];
+int b1[2],b2[2],  b3[2],b4[2];
+
+void test_symbol_char(){
+	char _a0,_a1,_a2,_a3;
+	char A0,A1,A2,A3;
+	char z_0,z_1,z_2,z_3;
+	_a0 = '+';
+	_a1 = '-';
+	_a2 = '*';
+	_a3 = '/';
+	A0 = 'a';
+	A1 = 'b';
+	A2 = 'c';
+	A3 = 'd';
+	z_0 = 'Z';
+	z_1 = 'Y';
+	z_2 = 'X';
+	z_3 = 'W';
+	printf(_a0);
+	printf(A0);
+	printf(z_0);
+	printf(_a1 + 1);
+	printf(A1 + 1);
+	printf(z_1 + 1);
+	printf(_a3 + A3 + z_3);
+}
+
+void test_scanf_printf(){
+	char a0,a1,a2;
+	int b0,b1,b2;
+	scanf(a0);
+	scanf(a1,b0);
+	scanf(b1,a2,b2);
+	printf("Hello world!");
+	printf("First, ", a0);
+	printf("Second,", b0);
+	printf(a1);
+	printf(b1);
+	printf(a2);
+	printf(a3);
+}
+
+void test_if_relational_operator(){
+	const int a0 = 5;
+	const int a1 = 10;
+	const int b0 = 5;
+	const int b1 = 10;
+	if(a1 > b0)
+		printf("a1 >= b0");
+	if(a1 > b1) printf("Greater Error");else printf("a1 <= b1");
+	if(a0 > b1)
+		printf("Greater Error");
+	else
+		printf("a0 <= b1");
+
+	if(a1 >= b0)
+		printf("a1 >= b0");
+	if(a0 >= b0)
+		printf("a0 >= b0");
+	if(a0 >= b1){
+		printf("Greater or equal error");
+	} else{
+		printf("a0 < b1");
+	}
+
+	if(a0 == b0){
+		printf("a0 == b0");
+	}
+	if(a0 == b1){
+		printf("Equal error");
+	} else printf("a0 != b1");
+
+	if(a0 != b0){
+		printf("Not equal error");
+	}
+	else
+		printf("a0 == b0");
+	if(a1 != b0){
+		printf("a0 != b0");
+	}
+
+	if(a1 < b0)
+		printf("Less Error");
+	else{
+		printf("a1 <= b0");
+	}
+	if(a1 < b1) printf("Less Error");else printf("a1 >= b1");
+	if(a0 < b1)
+		printf("a0 < b1");
+
+	if(a1 <= b0)
+		printf("Less or equal error");
+	else printf("a1 > b0");
+	if(a0 <= b0)
+		printf("a0 <= b0");
+	if(a0 <= b1){
+		printf("a0 <= b1");
+	}
+}
+
+void test_do_while(){
+	const int i = 0;
+	int j, result;
+	j = 100;
+	result = 0;
+	do{
+		result = result + 2;
+	}while(result <= 100)
+	printf("result = ", result);
+	do{
+		result = result - 2;
+	}while(result <= 0)
+	printf("result = ", result);
+}
+
+void test_for(){
+	const char a = 'a';
+	char b;
+	int i;
+	b = 'b';
+	for(i = 0; i < 10; i=i+1){
+		printf(i);
+	}
+	for(i = 10; i>= 1; i =i-1){
+		printf(i);
+	}
+}
+
+void test_expression(){
+	printf(1 + 1);
+	printf(10 - 3);
+	printf(10 * 3);
+	printf(6 / 2);
+	return;
+}
+
+void test_expression_with_colon(){
+	a1= 1;
+	a2 = 2;
+	a3 = 3;
+	a4 = 4;
+	a5 = 5;
+
+	printf(1 + 2 * 3);
+	printf((1 + 2) * 3);
+	printf((1 + 2) * (3 + 4));
+	printf((4 + 5) / (1 + 3));
+	printf(a1 + a2 * a3);
+	printf((a1 + a2) * a3);
+	printf((a1 + a2) * (a3 + a4));
+	printf((a4 + a5) / (a1 + a3));
+}
+
+void test_array(){
+	int temp_array[100];
+	int result, i;
+	result = 0;
+	b0[0] = 0;
+	b0[1] = 1;
+	for(i = 0; i < 100; i = i + 1){
+		temp_array[i] = i;
+	}
+	for(i = 0; i < 100; i = i + 1){
+		result = result + temp_array[i] * b0[i - i / 2 * 2];
+	}
+	printf(result);
+}
+
+int Fibonacci(int n) {
+    if (n == 1) {
+        return(1);
+    }
+    if (n == 2) {
+        return(1);
+    }
+    return(Fibonacci(n - 1) + Fibonacci(n - 2));
+}
+
+void test_recursion(){
+	if(Fibonacci(10) == 55){
+		printf("recursion right");
+	} else{
+		printf("recursion error");
+	}
+}
+
+void main(){
+	test_symbol_char();;;;
+	test_scanf_printf();
+	;
+	;
+	;
+	;
+	;
+	test_if_relational_operator();
+	test_do_while();
+	test_for();
+	test_expression();
+	test_expression_with_colon();
+	test_array();
+	test_recursion();
+	;;;;;;
+	;
+	;
+	;
+	return;;;;;
+}

@@ -153,7 +153,7 @@ public:
 	}
 
 
-	void callFunc(string funcName, vector<string> valParams) {
+	void callFunc(string funcName, vector<Value> valParams) {
 
 		IRCode.push_back(QuadCode(	// push ra
 			PUSH_STRING,
@@ -163,7 +163,7 @@ public:
 		for (auto it = valParams.rbegin(); it != valParams.rend(); ++it) {// push param
 			IRCode.push_back(QuadCode(
 				PUSH_STRING,
-				(*it)
+				it->val
 			));
 		}
 
