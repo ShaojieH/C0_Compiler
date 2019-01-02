@@ -20,7 +20,7 @@ Token* currentToken;
 string currentString;
 SymbolTable* symbolTable;
 
-IR ir = IR();
+IR ir;
 
 int lineCount = 1;
 int charCount = 1;

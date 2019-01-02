@@ -161,7 +161,7 @@ string math(QuadCode code) {
 	string op = code.first;
 	string des = code.second;
 
-	if (isNumber(code.third)) {	// add temp0 1 2
+	if (isNumber(code.third) && isNumber(code.fourth)) {
 		return move(code.second, calculateImme(
 				op,
 				stoi(code.third),

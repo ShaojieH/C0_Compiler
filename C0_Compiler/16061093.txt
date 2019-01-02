@@ -205,6 +205,9 @@ void main(){
             for(t23=0; t23<100; t23=t23+1){
                 t23 = t23+2;
                 if(t23>60){
+				printf(t18);
+				printf(t19);
+				printf(23);
                     printf(" ",t18+t19+t23);
                     return ;
                 }    
@@ -251,6 +254,12 @@ void main(){
     
     return ;
 }
+
+
+
+
+
+
 
 
 

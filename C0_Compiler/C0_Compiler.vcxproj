@@ -22,7 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{C0ED2781-9309-4C01-B3AE-51F8C4F7F29A}</ProjectGuid>
     <RootNamespace>C0Lex</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
     <ProjectName>C0_Compiler</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -145,7 +145,8 @@
     <Text Include="16231247.txt" />
     <Text Include="16231247_test1.txt" />
     <Text Include="16231281.txt" />
-    <Text Include="aaaaaaaaaaaaaa.txt" />
+    <Text Include="16061093.txt" />
+    <Text Include="calc2.txt" />
     <Text Include="param.txt" />
     <Text Include="type_error.txt" />
     <Text Include="call_func.txt" />

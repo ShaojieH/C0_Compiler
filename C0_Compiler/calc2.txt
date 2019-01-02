@@ -1,0 +1,12 @@
+int int1;
+
+void main(){
+	int1 = +4*2+('b'-'b')--12/(2*3);
+	printf(int1);
+}
+
+
+
+
+
+

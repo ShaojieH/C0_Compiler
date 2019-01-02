@@ -36,6 +36,7 @@ public:
 	Mips mips;
 	//utils
 
+
 	void printToFile() {
 		ofstream irFile;
 		ofstream realIrFile;
@@ -134,22 +135,14 @@ public:
 	}
 
 	void calc(string op, string des, string left, string right = "*") {
-		if (isNumber(left) && right != "*" && !isNumber(right) ) {
-			IRCode.push_back(QuadCode(
-				op,
-				des,
-				right,
-				left
-			));
-		} else {
+
 			IRCode.push_back(QuadCode(
 				op,
 				des,
 				left,
 				right
 			));
-		}
-
+		
 	}
 
 
