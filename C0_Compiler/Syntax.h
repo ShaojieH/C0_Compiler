@@ -181,11 +181,16 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 
 	symbolTable->addTable();
 
+	int i = 0;
 	for (auto param : paramList) {
 		BaseItem* result = symbolTable->insertSymbol(param.paramName, new VarItem(param.dataType));
 		if (result) {
 			param.irName = result->irName;
 			ir.funcParam(param);
+			if (i <= 3) {
+				ir.funcParamR(param, i++);
+			}
+			
 		}
 	}
 	

@@ -112,6 +112,15 @@ public:
 		
 	}
 
+	void funcParamR(Param param, int i) {	// pop param in reg
+		IRCode.push_back(QuadCode(
+			FUNC_STRING,
+			PARAMR_STRING,
+			"$a"+to_string(i),
+			param.irName));
+
+	}
+
 
 
 
@@ -152,6 +161,17 @@ public:
 			PUSH_STRING,
 			ra
 		));
+
+		int n = valParams.size() > 4 ? 4 : valParams.size();
+		vector<Value> regParams(valParams.end() - n, valParams.end());
+		int i = 0;
+		for (auto it = regParams.rbegin(); it != regParams.rend(); ++it) {
+			IRCode.push_back(QuadCode(
+				PUSHR_STRING,
+				it->val,
+				"$a" + to_string(i++)
+			));
+		}
 
 		for (auto it = valParams.rbegin(); it != valParams.rend(); ++it) {// push param
 			IRCode.push_back(QuadCode(

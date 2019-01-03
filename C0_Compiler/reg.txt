@@ -1,0 +1,16 @@
+void func1(){
+}
+
+void func2(int a, int b){
+}
+
+void func3(int a, int b, int c, int d, int e){
+}
+
+void main(){
+	func1();
+	func2(1,2);
+	func3(1,2,3,4,5);
+}
+
+

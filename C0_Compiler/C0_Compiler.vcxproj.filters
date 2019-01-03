@@ -197,6 +197,9 @@
     <Text Include="16061093.txt">
       <Filter>test\forum</Filter>
     </Text>
+    <Text Include="reg.txt">
+      <Filter>test</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <None Include="Mips.asm">

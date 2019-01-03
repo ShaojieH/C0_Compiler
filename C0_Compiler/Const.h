@@ -32,6 +32,8 @@ const string EXP_STRING = "EXP";
 
 const string DEF_STRING = "DEF";
 const string PARAM_STRING = "PARAM";
+const string PARAMR_STRING = "PARAMR";
+
 const string MAIN_STRING = "MAIN";
 const string ARRGET_STRING = "ARRGET";
 const string ARRSET_STRING = "ARRSET";
@@ -50,7 +52,9 @@ const string ARR_STRING = "ARR";
 
 
 const string PUSH_STRING = "PUSH";
+const string PUSHR_STRING = "PUSHR";
 const string POP_STRING = "POP";
+const string POPR_STRING = "POPR";
 
 const string BGE_STRING = "BGE";	// >=
 const string BGT_STRING = "BGT";	// >
