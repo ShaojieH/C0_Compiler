@@ -187,10 +187,10 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 		if (result) {
 			param.irName = result->irName;
 			ir.funcParam(param);
-			if (i <= 3) {
-				ir.funcParamR(param, i++);
-			}
 			
+			if(i >= paramList.size()-4 || paramList.size()<=4)
+				ir.funcParamR(param, paramList.size()-i-1);
+			i++;
 		}
 	}
 	
