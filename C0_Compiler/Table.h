@@ -74,7 +74,6 @@ public:
 		this->dataType = returnType;
 		this->type = T_FUNC;
 		this->params = params;
-
 		this->irName = FUNC_STRING + to_string(funcItemCount++);
 	}
 };

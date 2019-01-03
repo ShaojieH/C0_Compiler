@@ -239,6 +239,14 @@ string push(string val) {
 	return move("0(" + sp + ")", val)
 		+	calculate("add", sp, sp, "4");
 }
+// $a0
+string push_r(string reg, string val){
+	return move(reg, val);
+}
+
+string pop_r(string label, string reg){
+	return move(label, reg);
+}
 
 string pop(string label) {
 	return calculate("sub", sp, sp, "4")

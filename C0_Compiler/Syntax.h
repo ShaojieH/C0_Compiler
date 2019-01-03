@@ -186,10 +186,10 @@ void getFuncDef(TableItemDataType retType, string identifier) {
 		BaseItem* result = symbolTable->insertSymbol(param.paramName, new VarItem(param.dataType));
 		if (result) {
 			param.irName = result->irName;
-			ir.funcParam(param);
 			
 			if(i >= paramList.size()-4 || paramList.size()<=4)
 				ir.funcParamR(param, paramList.size()-i-1);
+			else ir.funcParam(param);
 			i++;
 		}
 	}
@@ -522,6 +522,7 @@ void getFuncCall(BaseItem* identifier) {
 	getLParen();
 	if (identifier->type != T_FUNC) {
 		syntaxError("Not a function",lineCount);
+		identifier = new FuncItem(T_VOID, vector<Param>());
 	}
 	vector<Value> valParams = getValParamList();
 	vector<Param> params = ((FuncItem*)identifier)->params;

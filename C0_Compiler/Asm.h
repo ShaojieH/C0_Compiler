@@ -67,6 +67,9 @@ public:
 			} else if(code.second == PARAM_STRING){
 				this->data.push_back(spaceAlloc(code.fourth, DATA_SIZE));
 				this->text.push_back(pop(code.fourth));
+			} else if(code.second == PARAMR_STRING){
+				this->data.push_back(spaceAlloc(code.fourth, DATA_SIZE));
+				this->text.push_back(pop_r(code.fourth, code.third));
 			}
 		} 
 
@@ -85,7 +88,10 @@ public:
 			} else {
 				this->text.push_back(push(code.second));
 			}
-			
+		}
+
+		else if (code.first == PUSHR_STRING) {
+			this->text.push_back(push_r(code.third, code.second));
 		}
 
 		else if (code.first == POP_STRING) {

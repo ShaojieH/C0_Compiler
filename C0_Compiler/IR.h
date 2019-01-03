@@ -164,8 +164,9 @@ public:
 
 		int n = valParams.size() > 4 ? 4 : valParams.size();
 		vector<Value> regParams(valParams.end() - n, valParams.end());
+
 		int i = 0;
-		for (auto it = regParams.rbegin(); it != regParams.rend(); ++it) {
+		for (auto it = regParams.rbegin(); it != regParams.rend(); ++it) {// push param to reg
 			IRCode.push_back(QuadCode(
 				PUSHR_STRING,
 				it->val,
@@ -173,7 +174,7 @@ public:
 			));
 		}
 
-		for (auto it = valParams.rbegin(); it != valParams.rend(); ++it) {// push param
+		for (auto it = valParams.rbegin()+n; it != valParams.rend(); ++it) {// push param
 			IRCode.push_back(QuadCode(
 				PUSH_STRING,
 				it->val
