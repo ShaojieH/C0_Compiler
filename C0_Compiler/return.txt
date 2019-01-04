@@ -1,8 +1,13 @@
+void func0(){
+	return (5);
+}
 
-int add2(){
-	char c;
-	return ((c));
+
+int func1(){
 }
 void main(){
 
 }
+
+
+
